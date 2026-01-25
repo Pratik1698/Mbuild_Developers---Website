@@ -37,9 +37,9 @@ body {
 
 .subtitle-badge {
   display: inline-block;
-  padding: 12px 30px;
-  background: rgba(255, 248, 235, 0.8);
-  border-radius: 40px;
+  padding: 7px 20px;
+  background: rgba(231, 230, 231, 0.8);
+  border-radius: 45px;
   font-family: 'Cinzel Decorative', serif;
   font-size: 22px;
   color: #8a6b3f;
@@ -67,7 +67,7 @@ body {
 
 /* ================= HEADER ================= */
 .main-header {
-    background: #fdfcfab4;
+    background: #ccc9c3b4;
     padding: 20px 0 0;
 }
 
