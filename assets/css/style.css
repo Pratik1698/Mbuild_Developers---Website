@@ -36,14 +36,15 @@ body {
 }
 
 .subtitle-badge {
-  display: inline-block;
-  padding: 7px 20px;
-  background: rgba(231, 230, 231, 0.8);
-  border-radius: 45px;
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 22px;
-  color: #8a6b3f;
-  backdrop-filter: blur(6px); /* premium glass effect */
+    display: inline-block;
+    padding: 7px 20px;
+    background: rgba(231, 230, 231, 0.8);
+    border-radius: 45px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 22px;
+    color: #8a6b3f;
+    backdrop-filter: blur(6px);
+    /* premium glass effect */
 }
 
 
@@ -54,10 +55,12 @@ body {
 
 .logo h1 {
     font-family: 'Alfa Slab One', serif;
-    font-weight: 400;
+    font-weight: 900;
     font-size: 65px;
     letter-spacing: 2px;
-    color: #c29658;
+    color: #ba946182;
+
+    -webkit-text-stroke: 2px #ffffff;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -65,9 +68,16 @@ body {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
 }
 
+.outline-text {
+    color: #d3c4b4;
+    /* text color */
+    -webkit-text-stroke: 2px white;
+    font-weight: 800;
+}
+
 /* ================= HEADER ================= */
 .main-header {
-    background: #ccc9c3b4;
+    background: rgb(210, 210, 202);
     padding: 20px 0 0;
 }
 
@@ -104,13 +114,35 @@ body {
     color: #d4af37;
 }
 
+.navbar a {
+    position: relative;
+}
+
+.navbar a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 3px;
+    background-color: rgb(221, 175, 82);
+    transition: width 0.3s ease;
+}
+
+/* On hover & click */
+.navbar a:hover::after,
+.navbar a:focus::after,
+.navbar a.active::after {
+    width: 100%;
+}
+
 /* ==========FOOTER SECTION ========== */
 footer {
     background-color: #261e2e;
     color: #ffffff;
     text-align: center;
     padding: 12px 15px;
-    margin-top: 785px;
+    margin-top: 10px;
 }
 
 footer p {
@@ -156,6 +188,14 @@ footer p {
     gap: 30px;
     margin-top: -40px;
     padding: 0 20px;
+}
+
+.info-row p {
+  color: #eaeaea;
+}
+
+.info-row a {
+  color: inherit;            /* inherit parent color */
 }
 
 .contact-card {
@@ -261,13 +301,13 @@ footer p {
 /* ===== CONTACT SECTION (PROFESSIONAL) ===== */
 .contact-section {
     background-color: #f4f6f8;
-    padding: 90px 20px;
+    padding: 50px 20px;
 }
 
 /* Heading */
 .contact-heading {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
 }
 
 .contact-heading h2 {
@@ -335,7 +375,7 @@ footer p {
 .contact-form-panel h3 {
     font-size: 26px;
     color: #0a3d62;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 }
 
 /* Form */
@@ -394,23 +434,73 @@ footer p {
     }
 }
 
+.social-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 80px;
+}
+
+.social-links img {
+  width: 70px;
+  height: 70px;
+  transition: transform 0.3s ease;
+}
+
+.social-links img:hover {
+  transform: scale(1.15);
+}
+/* Center social icons inside blue panel */
+.contact-info-panel .social-links {
+  display: flex;
+  justify-content: center;   /* 👈 THIS centers them */
+  align-items: center;
+  gap: 16px;
+  margin-top: 25px;
+}
+
 /* ===map section===*/
+
+/*Google Map – rounded, centered*/
+/* === MAP SECTION (FINAL) === */
+
+.map-wrapper {
+  max-width: 1000px;
+  margin: 60px auto;
+  text-align: center;
+}
+
+/* INCLUDED AS REQUESTED */
+.map-container {
+  max-width: 900px;
+  margin: 60px auto;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 420px;
+  border: 0;
+}
+
+/* Directions Button */
 .directions-btn {
-    text-align: center;
-    margin-top: 12px;
+  margin-top: 15px;
 }
 
 .directions-btn a {
-    background-color: #0a3d62;
-    color: #ffffff;
-    padding: 12px 24px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 6px;
-    display: inline-block;
-    font-size: 16px;
+  display: inline-block;
+  padding: 12px 26px;
+  background-color: #0a3d62;   /* brand navy */
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .directions-btn a:hover {
-    background-color: #07406b;
+  background-color: #08304c;
+  transform: translateY(-2px);
 }
