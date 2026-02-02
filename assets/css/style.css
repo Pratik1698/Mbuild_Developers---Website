@@ -500,7 +500,7 @@ footer p {
   transition: all 0.3s ease;
 }
 
-.directions-btn a:hover {
-  background-color: #08304c;
-  transform: translateY(-2px);
+
+html {
+    scroll-behavior: smooth;
 }
