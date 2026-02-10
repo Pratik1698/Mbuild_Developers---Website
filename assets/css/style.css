@@ -56,7 +56,7 @@ body {
 .logo h1 {
     font-family: 'Alfa Slab One', serif;
     font-weight: 900;
-    font-size: 65px;
+    font-size: 66px;
     letter-spacing: 2px;
     color: #ba946182;
 
@@ -191,11 +191,12 @@ footer p {
 }
 
 .info-row p {
-  color: #eaeaea;
+    color: #eaeaea;
 }
 
 .info-row a {
-  color: inherit;            /* inherit parent color */
+    color: inherit;
+    /* inherit parent color */
 }
 
 .contact-card {
@@ -435,27 +436,29 @@ footer p {
 }
 
 .social-links {
-  display: flex;
-  gap: 16px;
-  margin-top: 80px;
+    display: flex;
+    gap: 16px;
+    margin-top: 80px;
 }
 
 .social-links img {
-  width: 70px;
-  height: 70px;
-  transition: transform 0.3s ease;
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
 }
 
 .social-links img:hover {
-  transform: scale(1.15);
+    transform: scale(1.15);
 }
+
 /* Center social icons inside blue panel */
 .contact-info-panel .social-links {
-  display: flex;
-  justify-content: center;   /* 👈 THIS centers them */
-  align-items: center;
-  gap: 16px;
-  margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    /* 👈 THIS centers them */
+    align-items: center;
+    gap: 16px;
+    margin-top: 25px;
 }
 
 /* ===map section===*/
@@ -464,43 +467,214 @@ footer p {
 /* === MAP SECTION (FINAL) === */
 
 .map-wrapper {
-  max-width: 1000px;
-  margin: 60px auto;
-  text-align: center;
+    max-width: 1000px;
+    margin: 60px auto;
+    text-align: center;
 }
 
 /* INCLUDED AS REQUESTED */
 .map-container {
-  max-width: 900px;
-  margin: 60px auto;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    max-width: 900px;
+    margin: 60px auto;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
 }
 
 .map-container iframe {
-  width: 100%;
-  height: 420px;
-  border: 0;
+    width: 100%;
+    height: 420px;
+    border: 0;
 }
 
 /* Directions Button */
 .directions-btn {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 .directions-btn a {
-  display: inline-block;
-  padding: 12px 26px;
-  background-color: #0a3d62;   /* brand navy */
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 30px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+    display: inline-block;
+    padding: 12px 26px;
+    background-color: #0a3d62;
+    /* brand navy */
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 
 html {
     scroll-behavior: smooth;
+}
+
+/* foooter */
+/* ===== FOOTER ===== */
+
+.footer {
+    background: linear-gradient(
+    135deg,
+    #0b1220 0%,
+    #0f172a 70%,
+    #1a2238 100%
+  );
+    color: #ffffff;
+    padding: 60px 20px 20px;
+    margin-top: 80px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+}
+
+.footer-col p {
+    color: #9ca3af;
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+/* Brand */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.brand h2 {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.brand span {
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #9ca3af;
+}
+
+/* Headings */
+.footer-col h3 {
+    color: #f59e0b;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-family: 'Alfa Slab One', serif;
+    font-weight: 200;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+
+}
+
+.footer-col h4 {
+    color: #f59e0b;
+}
+
+/* Lists */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+    color: #9ca3af;
+    font-size: 19px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #9ca3af;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: #ffffff;
+}
+
+/* Social Icons */
+.social-icons a {
+    color: #9ca3af;
+    margin-right: 15px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: #f59e0b;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 60px;
+    /* 👈 control size here */
+    height: 60px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+
+/* Contact */
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.contact-list i {
+    color: #f59e0b;
+    /* yellow icon */
+    font-size: 18px;
+    margin-top: 3px;
+}
+
+.contact-list span {
+    color: #9ca3af;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+
+/* Bottom */
+.footer-bottom {
+    border-top: 1px solid #1f2933;
+    margin-top: 40px;
+    padding-top: 15px;
+    text-align: center;
+    font-size: px;
+    color: #9ca3af;
+}
+.footer {
+  background: linear-gradient(
+    135deg,
+    #0b1220 0%,
+    #0f172a 50%,
+    #111827 100%
+  );
 }
