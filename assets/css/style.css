@@ -9,7 +9,7 @@
 /* ==========BODY SECTION ========== */
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f7f4f8;
+    background-color: #d8e7ec;
     color: #333;
 }
 
@@ -677,4 +677,146 @@ html {
     #0f172a 50%,
     #111827 100%
   );
+}
+
+/* HERO SECTION */
+.hero-section {
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h2 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+.hero-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.hero-btn {
+    padding: 12px 30px;
+    background: #ff6a00;
+    color: #c71d1d;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: 0.3s ease;
+}
+
+.hero-btn:hover {
+    background: #e65c00;
+}
+
+
+/* GALLERY SECTION */
+.gallery-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 60px 8%;
+}
+
+.gallery-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.gallery-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+/* Zoom Effect */
+.gallery-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Overlay */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 8, 8, 0.65);
+    color: rgb(227, 208, 208);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    text-align: center;
+}
+
+.gallery-card:hover .overlay {
+    opacity: 1;
+}
+
+.overlay h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.overlay p {
+    font-size: 20px;
+}
+
+.hero-section {
+  position: relative;
+  height: 75vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+}
+
+/* Video */
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+}
+/* Dark overlay */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Content on top */
+.hero-content {
+  position: relative;
+  z-index: 2;
 }
