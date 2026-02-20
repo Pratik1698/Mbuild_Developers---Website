@@ -12,6 +12,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/logo_new.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
 
     <!-- External CSS -->
@@ -110,14 +111,14 @@
                 <p>Satara</p>
             </div>
         </div>
-         <div class="gallery-card">
+        <div class="gallery-card">
             <img src="../assets/images/project_07.jpg" alt="Project 4">
             <div class="overlay">
                 <h3>Interior Project</h3>
                 <p>Satara</p>
             </div>
         </div>
-         <div class="gallery-card">
+        <div class="gallery-card">
             <img src="../assets/images/project_08.png" alt="Project 4">
             <div class="overlay">
                 <h3>Interior Project</h3>
@@ -130,6 +131,22 @@
     <footer>
         <p>© 2026 MBUILD Developers | All Rights Reserved</p>
     </footer>
+
+    <!-- IMAGE POPUP MODAL -->
+    <div class="image-modal" id="imageModal">
+        <span class="close-btn" id="closeModal">&times;</span>
+
+        <img id="modalImage">
+
+        <div class="modal-content-text">
+            <h2 id="modalTitle"></h2>
+            <p id="modalSize"></p>
+            <p id="modalCost"></p>
+            <p id="modalLocation"></p>
+        </div>
+    </div>
+
+    <script src="../assets/js/script.js"></script>
 
 </body>
 
