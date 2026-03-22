@@ -11,6 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+
+<!-- ══════════════════════════════
+     EmailJS SDK — sends email directly to owner
+     Setup: https://www.emailjs.com
+══════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <style>
 :root {
   --gold:#c9a84c; --gold-light:#e2c97e; --gold-dark:#9a7830;
@@ -26,22 +33,16 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;color:var(--text);overflow-x:hidden;background:var(--bg);}
-img{display:block;}
-a{text-decoration:none;}
-button{font-family:'DM Sans',sans-serif;cursor:pointer;}
+img{display:block;} a{text-decoration:none;} button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(26,53,88,.25);border-radius:4px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(201,168,76,.6);}
 
-/* PROGRESS BAR */
 #progress-bar{position:fixed;top:0;left:0;height:2px;z-index:9999;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0%;transition:width .1s linear;}
 
 /* ── HERO ── */
-.page-hero{
-  position:relative;width:100%;height:400px;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;text-align:center;
-}
+.page-hero{position:relative;width:100%;height:400px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;}
 .hero-img-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;transform:scale(1.04);animation:heroZ 14s ease-in-out infinite alternate;}
 @keyframes heroZ{from{transform:scale(1.04)}to{transform:scale(1.1)}}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,40,.92) 0%,rgba(10,20,40,.55) 50%,rgba(10,20,40,.2) 100%);}
@@ -60,66 +61,36 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 .hero-cta:hover{background:var(--gold-light);transform:translateY(-2px);}
 
 /* ── QUICK INFO CARDS ── */
-.info-cards-section{background:var(--blue);padding:0;}
+.info-cards-section{background:var(--blue);}
 .info-cards{display:grid;grid-template-columns:repeat(3,1fr);}
-.info-card{
-  display:flex;align-items:flex-start;gap:16px;
-  padding:32px 36px;
-  border-right:1px solid rgba(255,255,255,.1);
-  transition:.2s;
-}
+.info-card{display:flex;align-items:flex-start;gap:16px;padding:32px 36px;border-right:1px solid rgba(255,255,255,.1);transition:.2s;}
 .info-card:last-child{border-right:none;}
 .info-card:hover{background:rgba(255,255,255,.05);}
-.ic-icon{
-  width:48px;height:48px;border-radius:12px;flex-shrink:0;
-  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--gold);font-size:1.1rem;
-}
+.ic-icon{width:48px;height:48px;border-radius:12px;flex-shrink:0;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;}
 .ic-text h4{font-size:.82rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
 .ic-text p,.ic-text a{font-size:.87rem;color:rgba(255,255,255,.7);line-height:1.65;}
-.ic-text a{transition:.2s;}
-.ic-text a:hover{color:var(--gold-light);}
+.ic-text a{transition:.2s;}.ic-text a:hover{color:var(--gold-light);}
 
-/* ── MAIN CONTACT SECTION ── */
+/* ── CONTACT MAIN ── */
 .contact-main{background:var(--bg);padding:72px 60px;}
 .contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:32px;max-width:1200px;margin:0 auto;}
-
-/* LEFT — Info Panel */
 .contact-left{display:flex;flex-direction:column;gap:20px;}
-.contact-left-top{
-  background:var(--white);border-radius:20px;
-  padding:36px;box-shadow:var(--shadow-sm);
-}
+.contact-left-top{background:var(--white);border-radius:20px;padding:36px;box-shadow:var(--shadow-sm);}
 .cl-eye{display:flex;align-items:center;gap:8px;color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
 .cl-eye::before{content:'';width:22px;height:1.5px;background:var(--gold);}
 .contact-left-top h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:800;color:var(--blue);margin-bottom:10px;line-height:1.2;}
 .contact-left-top p{font-size:.88rem;color:var(--text-muted);line-height:1.75;margin-bottom:24px;}
-
 .contact-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--beige2);}
 .contact-detail:last-of-type{border-bottom:none;}
-.cd-icon{
-  width:40px;height:40px;border-radius:10px;flex-shrink:0;
-  background:var(--beige2);display:flex;align-items:center;justify-content:center;
-  color:var(--gold);font-size:.95rem;transition:.2s;
-}
+.cd-icon{width:40px;height:40px;border-radius:10px;flex-shrink:0;background:var(--beige2);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.95rem;transition:.2s;}
 .contact-detail:hover .cd-icon{background:var(--gold);color:var(--blue);}
 .cd-info label{display:block;font-size:.7rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;}
 .cd-info p,.cd-info a{font-size:.87rem;color:var(--blue);font-weight:500;line-height:1.6;}
 .cd-info a{transition:.2s;}.cd-info a:hover{color:var(--gold);}
-
-/* Social row */
-.social-row{display:flex;gap:12px;margin-top:20px;}
-.social-btn{
-  display:flex;align-items:center;gap:7px;
-  padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:700;
-  border:1.5px solid var(--beige2);color:var(--blue);transition:.25s;
-  background:var(--white);
-}
+.social-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.social-btn{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:700;border:1.5px solid var(--beige2);color:var(--blue);transition:.25s;background:var(--white);}
 .social-btn:hover{border-color:var(--gold);background:var(--beige);transform:translateY(-2px);}
 .social-btn img{width:18px;height:18px;object-fit:contain;}
-
-/* Business hours card */
 .hours-card{background:var(--blue);border-radius:20px;padding:28px 32px;}
 .hours-card h4{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .hours-card h4 i{color:var(--gold);}
@@ -131,16 +102,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 .hours-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#25d366;animation:blink 1.5s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* RIGHT — Form Panel */
-.contact-form-card{
-  background:var(--white);border-radius:20px;
-  padding:44px;box-shadow:var(--shadow-md);
-  position:relative;overflow:hidden;
-}
-.contact-form-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--blue),var(--gold));
-}
+/* ── FORM ── */
+.contact-form-card{background:var(--white);border-radius:20px;padding:44px;box-shadow:var(--shadow-md);position:relative;overflow:hidden;}
+.contact-form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold));}
 .cf-eye{display:flex;align-items:center;gap:8px;color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
 .cf-eye::before{content:'';width:22px;height:1.5px;background:var(--gold);}
 .contact-form-card h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:800;color:var(--blue);margin-bottom:6px;}
@@ -148,54 +112,49 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
 .fg label{font-size:.76rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;}
-.fg input,.fg textarea,.fg select{
-  width:100%;padding:13px 16px;
-  border:1.5px solid var(--beige2);
-  border-radius:10px;background:var(--beige);
-  font-size:.9rem;font-family:'DM Sans',sans-serif;
-  color:var(--text);transition:.3s;outline:none;
-}
-.fg input:focus,.fg textarea:focus,.fg select:focus{
-  border-color:var(--gold);background:var(--white);
-  box-shadow:0 0 0 3px rgba(201,168,76,.12);
-}
+.fg input,.fg textarea,.fg select{width:100%;padding:13px 16px;border:1.5px solid var(--beige2);border-radius:10px;background:var(--beige);font-size:.9rem;font-family:'DM Sans',sans-serif;color:var(--text);transition:.3s;outline:none;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 3px rgba(201,168,76,.12);}
 .fg textarea{resize:vertical;min-height:120px;}
 .fg select{appearance:none;cursor:pointer;}
-.submit-btn{
-  width:100%;padding:15px;
-  background:var(--gold);color:var(--blue);
-  border:none;border-radius:10px;
-  font-size:.95rem;font-weight:800;
-  letter-spacing:.3px;transition:.3s var(--ease);
-  box-shadow:0 6px 22px rgba(201,168,76,.35);
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  margin-top:6px;
-}
-.submit-btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.5);}
+
+/* Submit button states */
+.submit-btn{width:100%;padding:15px;background:var(--gold);color:var(--blue);border:none;border-radius:10px;font-size:.95rem;font-weight:800;letter-spacing:.3px;transition:.3s var(--ease);box-shadow:0 6px 22px rgba(201,168,76,.35);display:flex;align-items:center;justify-content:center;gap:9px;margin-top:6px;}
+.submit-btn:hover:not(:disabled){background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.5);}
+.submit-btn:disabled{opacity:.7;cursor:not-allowed;transform:none;}
+.submit-btn.loading{background:var(--beige2);color:var(--text-muted);}
+.submit-btn.success{background:#1a7a40;color:#fff;box-shadow:0 6px 22px rgba(37,211,102,.35);}
+.submit-btn.error-state{background:#c0392b;color:#fff;}
+
 .form-note{text-align:center;font-size:.76rem;color:var(--text-muted);margin-top:12px;}
 .form-note i{color:var(--gold);margin-right:4px;}
 
-/* ── MAP SECTION ── */
+/* Status messages */
+.form-status{display:none;padding:18px 20px;border-radius:12px;margin-top:16px;text-align:center;}
+.form-status.success{display:block;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3);}
+.form-status.error{display:block;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);}
+.form-status i{font-size:1.8rem;margin-bottom:8px;display:block;}
+.form-status.success i{color:#25d366;}
+.form-status.error i{color:#c0392b;}
+.form-status h4{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--blue);margin-bottom:4px;}
+.form-status p{font-size:.84rem;color:var(--text-muted);}
+
+/* ── MAP ── */
 .map-section{background:var(--beige);padding:60px 60px;}
 .map-header{text-align:center;margin-bottom:32px;}
 .map-eye{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-size:.73rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}
 .map-eye::before,.map-eye::after{content:'';width:26px;height:1.5px;background:var(--gold);}
 .map-header h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;color:var(--blue);margin-bottom:8px;}
 .map-header p{color:var(--text-muted);font-size:.9rem;}
-.map-wrap{max-width:1000px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative;}
+.map-wrap{max-width:1000px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);}
 .map-wrap iframe{width:100%;height:420px;border:0;display:block;}
 .map-actions{display:flex;justify-content:center;gap:14px;margin-top:22px;flex-wrap:wrap;}
-.map-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:11px 28px;border-radius:8px;
-  font-size:.84rem;font-weight:700;transition:.25s;
-}
+.map-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 28px;border-radius:8px;font-size:.84rem;font-weight:700;transition:.25s;}
 .map-btn-primary{background:var(--gold);color:var(--blue);border:none;box-shadow:0 4px 16px rgba(201,168,76,.3);}
 .map-btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);}
 .map-btn-secondary{background:transparent;color:var(--blue);border:1.5px solid var(--blue);}
 .map-btn-secondary:hover{background:var(--blue);color:#fff;}
 
-/* CTA */
+/* ── CTA ── */
 .cta-banner{background:var(--navy);padding:80px 20px;text-align:center;position:relative;overflow:hidden;margin-bottom:0;}
 .cta-banner::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(201,168,76,.07) 1px,transparent 1px);background-size:28px 28px;}
 .cta-banner::after{content:"";position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
@@ -223,26 +182,15 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 .reveal.in{opacity:1;transform:translateY(0);}
 .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
 
-/* SUCCESS MESSAGE */
-.success-msg{display:none;text-align:center;padding:24px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3);border-radius:12px;margin-top:16px;}
-.success-msg i{font-size:2rem;color:#25d366;margin-bottom:8px;display:block;}
-.success-msg h4{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue);margin-bottom:4px;}
-.success-msg p{font-size:.85rem;color:var(--text-muted);}
-
 /* RESPONSIVE */
-@media(max-width:1100px){
-  .contact-main{padding:60px 40px;}
-  .map-section{padding:52px 40px;}
-}
+@media(max-width:1100px){.contact-main{padding:60px 40px;}.map-section{padding:52px 40px;}}
 @media(max-width:900px){
   .info-cards{grid-template-columns:1fr;}
   .info-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}
   .info-card:last-child{border-bottom:none;}
   .contact-grid{grid-template-columns:1fr;}
-  .contact-main{padding:48px 20px;}
-  .map-section{padding:44px 20px;}
-  .page-hero{height:320px;}
-  .hero-bread{left:20px;}
+  .contact-main,.map-section{padding:48px 20px;}
+  .page-hero{height:320px;}.hero-bread{left:20px;}
   .form-row{grid-template-columns:1fr;}
 }
 @media(max-width:600px){
@@ -252,17 +200,13 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
   .cta-btns{flex-direction:column;align-items:center;}
   .btn-cta-gold,.btn-cta-wa{width:100%;max-width:300px;justify-content:center;}
   .map-section{padding:36px 16px;}
-  .social-row{flex-wrap:wrap;}
 }
 </style>
 </head>
 <body>
 
 <div id="progress-bar"></div>
-
-<a class="wa-float" href="https://wa.me/918600928493" target="_blank">
-  <span class="wa-tt">Chat with us →</span>💬
-</a>
+<a class="wa-float" href="https://wa.me/918600928493" target="_blank"><span class="wa-tt">Chat with us →</span>💬</a>
 
 <!-- HEADER -->
 <header class="main-header">
@@ -277,7 +221,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
     <a href="Interior-projects.html">Interior Projects</a>
     <a href="Photo-Gallary.html">Photo Gallery</a>
     <a href="Contact-Us.html" class="active">Contact Us</a>
-    <a href="About-Us.html">About-Us</a>
+    <a href="About-Us.html">About Us</a>
   </nav>
 </header>
 
@@ -298,94 +242,56 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
   </div>
 </div>
 
-<!-- QUICK INFO CARDS -->
+<!-- QUICK INFO -->
 <div class="info-cards-section">
   <div class="info-cards">
     <div class="info-card reveal">
       <div class="ic-icon"><i class="fas fa-phone"></i></div>
-      <div class="ic-text">
-        <h4>Call Us</h4>
-        <p><a href="tel:+918600928493">+91 86009 28493</a></p>
-        <p><a href="tel:+918669156263">+91 86691 56263</a></p>
-      </div>
+      <div class="ic-text"><h4>Call Us</h4><p><a href="tel:+918600928493">+91 86009 28493</a></p><p><a href="tel:+918669156263">+91 86691 56263</a></p></div>
     </div>
     <div class="info-card reveal d1">
       <div class="ic-icon"><i class="fas fa-envelope"></i></div>
-      <div class="ic-text">
-        <h4>Email Us</h4>
-        <p><a href="mailto:mbuiltsangli@gmail.com">mbuiltsangli@gmail.com</a></p>
-        <p><a href="mailto:mbuilddevelopers@gmail.com">mbuilddevelopers@gmail.com</a></p>
-      </div>
+      <div class="ic-text"><h4>Email Us</h4><p><a href="mailto:mbuiltsangli@gmail.com">mbuiltsangli@gmail.com</a></p><p><a href="mailto:mbuilddevelopers@gmail.com">mbuilddevelopers@gmail.com</a></p></div>
     </div>
     <div class="info-card reveal d2">
       <div class="ic-icon"><i class="fas fa-location-dot"></i></div>
-      <div class="ic-text">
-        <h4>Visit Us</h4>
-        <p>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309</p>
-      </div>
+      <div class="ic-text"><h4>Visit Us</h4><p>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309</p></div>
     </div>
   </div>
 </div>
 
-<!-- MAIN CONTACT SECTION -->
+<!-- MAIN CONTACT -->
 <section class="contact-main" id="contact">
   <div class="contact-grid">
 
-    <!-- LEFT — Details -->
+    <!-- LEFT -->
     <div class="contact-left">
       <div class="contact-left-top reveal">
         <div class="cl-eye">Get in Touch</div>
         <h2>We'd Love to<br/>Hear From You</h2>
-        <p>Whether you have a project in mind or just want to explore possibilities — our team is ready to help. Reach out through any of the channels below.</p>
-
+        <p>Whether you have a project in mind or just want to explore possibilities — our team is ready to help.</p>
         <div class="contact-detail">
           <div class="cd-icon"><i class="fas fa-phone"></i></div>
-          <div class="cd-info">
-            <label>Phone</label>
-            <a href="tel:+918600928493">+91 86009 28493</a><br/>
-            <a href="tel:+918669156263">+91 86691 56263</a>
-          </div>
+          <div class="cd-info"><label>Phone</label><a href="tel:+918600928493">+91 86009 28493</a><br/><a href="tel:+918669156263">+91 86691 56263</a></div>
         </div>
-
         <div class="contact-detail">
           <div class="cd-icon"><i class="fas fa-envelope"></i></div>
-          <div class="cd-info">
-            <label>Email</label>
-            <a href="mailto:mbuiltsangli@gmail.com">mbuiltsangli@gmail.com</a><br/>
-            <a href="mailto:mbuilddevelopers@gmail.com">mbuilddevelopers@gmail.com</a>
-          </div>
+          <div class="cd-info"><label>Email</label><a href="mailto:mbuiltsangli@gmail.com">mbuiltsangli@gmail.com</a><br/><a href="mailto:mbuilddevelopers@gmail.com">mbuilddevelopers@gmail.com</a></div>
         </div>
-
         <div class="contact-detail">
           <div class="cd-icon"><i class="fas fa-location-dot"></i></div>
-          <div class="cd-info">
-            <label>Office Address</label>
-            <p>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309,<br/>Maharashtra, India</p>
-          </div>
+          <div class="cd-info"><label>Office Address</label><p>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309,<br/>Maharashtra, India</p></div>
         </div>
-
         <div class="contact-detail">
           <div class="cd-icon"><i class="fas fa-id-card"></i></div>
-          <div class="cd-info">
-            <label>GST Number</label>
-            <p>27BAIPJ8787J1ZW</p>
-          </div>
+          <div class="cd-info"><label>GST Number</label><p>27BAIPJ8787J1ZW</p></div>
         </div>
-
         <div class="social-row">
-          <a class="social-btn" href="https://wa.me/918600928493" target="_blank">
-            <img src="../assets/images/Whatsapp.png" alt="WhatsApp"/>WhatsApp
-          </a>
-          <a class="social-btn" href="https://www.instagram.com/mbuilddevelopers2024" target="_blank">
-            <img src="../assets/images/Instagram.png" alt="Instagram"/>Instagram
-          </a>
-          <a class="social-btn" href="https://www.facebook.com/your_facebook" target="_blank">
-            <img src="../assets/images/Facebook.png" alt="Facebook"/>Facebook
-          </a>
+          <a class="social-btn" href="https://wa.me/918600928493" target="_blank"><img src="../assets/images/Whatsapp.png" alt="WhatsApp"/>WhatsApp</a>
+          <a class="social-btn" href="https://www.instagram.com/mbuilddevelopers2024" target="_blank"><img src="../assets/images/Instagram.png" alt="Instagram"/>Instagram</a>
+          <a class="social-btn" href="https://www.facebook.com/your_facebook" target="_blank"><img src="../assets/images/Facebook.png" alt="Facebook"/>Facebook</a>
         </div>
       </div>
-
-      <!-- Business Hours -->
       <div class="hours-card reveal d1">
         <h4><i class="fas fa-clock"></i> Business Hours</h4>
         <div class="hours-row"><span>Monday – Saturday</span><span>9:00 AM – 7:00 PM</span></div>
@@ -395,32 +301,30 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
       </div>
     </div>
 
-    <!-- RIGHT — Form -->
+    <!-- RIGHT — FORM -->
     <div class="contact-form-card reveal d1">
       <div class="cf-eye">Project Enquiry</div>
       <h2>Tell Us About<br/>Your Project</h2>
       <p class="form-sub">Fill in the form and our team will get back to you within 24 hours with a free consultation.</p>
 
-      <form id="contactForm" onsubmit="handleSubmit(event)">
+      <form id="contactForm">
         <div class="form-row">
           <div class="fg">
             <label>Full Name *</label>
-            <input type="text" placeholder="Er. Pramod Jadhav" required/>
+            <input type="text" id="from_name" placeholder="Your full name" required/>
           </div>
           <div class="fg">
             <label>Contact Number *</label>
-            <input type="tel" placeholder="+91 86009 28493" required/>
+            <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" required/>
           </div>
         </div>
-
         <div class="fg">
           <label>Email Address</label>
-          <input type="email" placeholder="you@example.com"/>
+          <input type="email" id="from_email" placeholder="you@example.com"/>
         </div>
-
         <div class="fg">
           <label>Project Type</label>
-          <select>
+          <select id="project_type">
             <option value="">Select project type...</option>
             <option>Residential Building / Bunglow</option>
             <option>Commercial Building</option>
@@ -430,27 +334,34 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
             <option>Industrial / Other</option>
           </select>
         </div>
-
         <div class="fg">
           <label>Location / City</label>
-          <input type="text" placeholder="Sangli, Satara, Kolhapur..."/>
+          <input type="text" id="location" placeholder="Sangli, Satara, Kolhapur..."/>
         </div>
-
         <div class="fg">
           <label>Project Details &amp; Requirements *</label>
-          <textarea placeholder="Tell us about your project — area, budget, timeline, any special requirements..." required></textarea>
+          <textarea id="message" placeholder="Tell us about your project — area, budget, timeline, any special requirements..." required></textarea>
         </div>
 
-        <button type="submit" class="submit-btn">
-          <i class="fas fa-paper-plane"></i> Submit Enquiry →
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i class="fas fa-paper-plane"></i>
+          <span id="btnText">Submit Enquiry →</span>
         </button>
         <p class="form-note"><i class="fas fa-lock"></i> Your information is safe with us. No spam, ever.</p>
       </form>
 
-      <div class="success-msg" id="successMsg">
+      <!-- Success message -->
+      <div class="form-status success" id="successMsg">
         <i class="fas fa-circle-check"></i>
         <h4>Enquiry Sent Successfully!</h4>
         <p>Thank you for reaching out. Our team will contact you within 24 hours.</p>
+      </div>
+
+      <!-- Error message -->
+      <div class="form-status error" id="errorMsg">
+        <i class="fas fa-circle-exclamation"></i>
+        <h4>Something went wrong</h4>
+        <p>Please try again or call us directly at <a href="tel:+918600928493" style="color:var(--blue);font-weight:700;">+91 86009 28493</a></p>
       </div>
     </div>
 
@@ -465,18 +376,11 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
     <p>Main Road, Behind AK Mobiles, Kundal, Tal. Palus, Sangli – 416309</p>
   </div>
   <div class="map-wrap reveal">
-    <iframe
-      src="https://www.google.com/maps?q=17.117387844078543,74.41011076351721&z=15&output=embed"
-      loading="lazy" allowfullscreen>
-    </iframe>
+    <iframe src="https://www.google.com/maps?q=17.117387844078543,74.41011076351721&z=15&output=embed" loading="lazy" allowfullscreen></iframe>
   </div>
   <div class="map-actions">
-    <a class="map-btn map-btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=17.117387844078543,74.41011076351721" target="_blank">
-      <i class="fas fa-location-arrow"></i> Get Directions
-    </a>
-    <a class="map-btn map-btn-secondary" href="https://wa.me/918600928493?text=Hi, I would like to visit your office. Please share the exact location." target="_blank">
-      <i class="fab fa-whatsapp"></i> Ask on WhatsApp
-    </a>
+    <a class="map-btn map-btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=17.117387844078543,74.41011076351721" target="_blank"><i class="fas fa-location-arrow"></i> Get Directions</a>
+    <a class="map-btn map-btn-secondary" href="https://wa.me/918600928493?text=Hi, I would like to visit your office." target="_blank"><i class="fab fa-whatsapp"></i> Ask on WhatsApp</a>
   </div>
 </section>
 
@@ -485,7 +389,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
   <div class="cta-inner reveal">
     <div class="cta-eyebrow">Start Your Project</div>
     <h2>Ready to Build Your<br/><em>Dream Space?</em></h2>
-    <p>Get a free, no-obligation consultation from our expert team. We'll assess your requirements and provide a transparent quote within 24 hours.</p>
+    <p>Get a free, no-obligation consultation from our expert team within 24 hours.</p>
     <div class="cta-btns">
       <a href="tel:+918600928493"><button class="btn-cta-gold"><i class="fas fa-phone"></i> Call Us Now →</button></a>
       <a href="https://wa.me/918600928493" target="_blank"><button class="btn-cta-wa">💬 WhatsApp Us Now</button></a>
@@ -497,12 +401,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 <footer class="footer">
   <div class="footer-container">
     <div class="footer-col">
-      <div class="brand">
-        <img src="../assets/images/logo_new.png" alt="MBUILD Developers"/>
-        <div><h2>MBUILD</h2><span>DEVELOPERS</span></div>
-      </div>
+      <div class="brand"><img src="../assets/images/logo_new.png" alt="MBUILD"/><div><h2>MBUILD</h2><span>DEVELOPERS</span></div></div>
       <h4><strong>(Dream Big Build Right)</strong></h4>
-      <p>Leading the way in construction excellence. We build residential and commercial spaces that stand the test of time.</p>
+      <p>Leading the way in construction excellence across Maharashtra.</p>
       <div class="social-icons">
         <a href="https://www.facebook.com/your_facebook" target="_blank"><img src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"/></a>
         <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank"><img src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"/></a>
@@ -517,23 +418,17 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
         <li><a href="Civil-Projects.html">Civil Projects</a></li>
         <li><a href="Interior-projects.html">Interior Projects</a></li>
         <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
-        <li><a href="Certificates.html">Certificates</a></li>
+        <li><a href="About-Us.html">About Us</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h3>Our Services</h3>
-      <ul>
-        <li>Civil Construction</li>
-        <li>Interior Design</li>
-        <li>Renovations</li>
-        <li>Architectural Planning</li>
-        <li>Project Management</li>
-      </ul>
+      <ul><li>Civil Construction</li><li>Interior Design</li><li>Renovations</li><li>Architectural Planning</li><li>Project Management</li></ul>
     </div>
     <div class="footer-col">
       <h3>Contact Us</h3>
       <ul class="contact-list">
-        <li><i class="fas fa-location-dot"></i><span>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus,<br/>Sangli – 416309, Maharashtra</span></li>
+        <li><i class="fas fa-location-dot"></i><span>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309</span></li>
         <li><i class="fas fa-phone"></i><span>+91 86009 28493<br/>+91 86691 56263</span></li>
         <li><i class="fas fa-envelope"></i><span>mbuiltsangli@gmail.com<br/>mbuilddevelopers@gmail.com</span></li>
       </ul>
@@ -543,30 +438,111 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;}
 </footer>
 
 <script>
-/* PROGRESS BAR */
-window.addEventListener('scroll',()=>{
-  const s=document.documentElement;
-  document.getElementById('progress-bar').style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
-},{passive:true});
+/* ═══════════════════════════════════════════
+   EMAILJS SETUP
+   ─────────────────────────────────────────
+   STEP 1: Go to https://www.emailjs.com
+   STEP 2: Sign up free (200 emails/month)
+   STEP 3: Add Service → Gmail → connect mbuiltsangli@gmail.com
+   STEP 4: Create Email Template with these variables:
+           {{from_name}}, {{from_email}}, {{phone}},
+           {{project_type}}, {{location}}, {{message}}
+   STEP 5: Replace the 3 values below with your real IDs
+═══════════════════════════════════════════ */
 
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
-},{threshold:0.07});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const EMAILJS_PUBLIC_KEY  = 'bAgcwUu1efhlwRsYZ';   // From EmailJS → Account → API Keys
+const EMAILJS_SERVICE_ID  = 'service_6ursexw';   // From EmailJS → Email Services
+const EMAILJS_TEMPLATE_ID = 'template_kehld9g';  // From EmailJS → Email Templates
 
-/* FORM SUBMIT */
-function handleSubmit(e){
+// Initialize EmailJS
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+/* ── FORM SUBMIT ── */
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  document.getElementById('contactForm').style.display='none';
-  document.getElementById('successMsg').style.display='block';
-}
 
-/* SMOOTH SCROLL */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const t=document.querySelector(a.getAttribute('href'));
-    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  const btn     = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const successMsg = document.getElementById('successMsg');
+  const errorMsg   = document.getElementById('errorMsg');
+
+  // Reset previous messages
+  successMsg.style.display = 'none';
+  errorMsg.style.display   = 'none';
+
+  // Loading state
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btnText.textContent = 'Sending...';
+  btn.querySelector('i').className = 'fas fa-spinner fa-spin';
+
+  // Collect form data
+  const templateParams = {
+    from_name:    document.getElementById('from_name').value,
+    from_email:   document.getElementById('from_email').value || 'Not provided',
+    phone:        document.getElementById('phone').value,
+    project_type: document.getElementById('project_type').value || 'Not specified',
+    location:     document.getElementById('location').value || 'Not specified',
+    message:      document.getElementById('message').value,
+    to_email:     'mbuiltsangli@gmail.com',
+    reply_to:     document.getElementById('from_email').value || 'mbuiltsangli@gmail.com',
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+
+    // SUCCESS
+    btn.classList.remove('loading');
+    btn.classList.add('success');
+    btnText.textContent = 'Enquiry Sent!';
+    btn.querySelector('i').className = 'fas fa-circle-check';
+    successMsg.style.display = 'block';
+    this.reset();
+
+    // Reset button after 4s
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('success');
+      btnText.textContent = 'Submit Enquiry →';
+      btn.querySelector('i').className = 'fas fa-paper-plane';
+    }, 4000);
+
+  } catch (error) {
+    console.error('EmailJS error:', error);
+
+    // ERROR
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.classList.add('error-state');
+    btnText.textContent = 'Failed — Try Again';
+    btn.querySelector('i').className = 'fas fa-rotate-right';
+    errorMsg.style.display = 'block';
+
+    setTimeout(() => {
+      btn.classList.remove('error-state');
+      btnText.textContent = 'Submit Enquiry →';
+      btn.querySelector('i').className = 'fas fa-paper-plane';
+    }, 4000);
+  }
+});
+
+/* ── PROGRESS BAR ── */
+window.addEventListener('scroll', () => {
+  const s = document.documentElement;
+  document.getElementById('progress-bar').style.width = (s.scrollTop / (s.scrollHeight - s.clientHeight) * 100) + '%';
+}, { passive: true });
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
 </script>
