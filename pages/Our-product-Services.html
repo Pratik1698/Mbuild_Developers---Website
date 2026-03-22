@@ -1,298 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Products & Services – MBUILD DEVELOPERS</title>
+<meta name="description" content="MBUILD Developers – Architecture, Engineering & Construction Services in Maharashtra."/>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:#c9a84c; --gold-light:#e2c97e; --gold-dark:#9a7830;
+  --blue:#1a3558; --blue2:#254a78; --blue-light:#2e6aad;
+  --navy:#0d1f35; --white:#fff; --beige:#f5f0e8; --beige2:#ede6d6;
+  --text:#2a2a2a; --text-muted:#7a7060;
+  --shadow-sm:0 2px 12px rgba(0,0,0,.07);
+  --shadow-md:0 8px 28px rgba(26,53,88,.13);
+  --shadow-lg:0 18px 52px rgba(26,53,88,.2);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --bg:#d8eaf0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;color:var(--text);overflow-x:hidden;background:var(--bg);}
+img{display:block;}
+a{text-decoration:none;}
+button{font-family:'DM Sans',sans-serif;cursor:pointer;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(26,53,88,.25);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(201,168,76,.6);}
 
-    <title>Mbuild Developers | Architecture, Engineer & Contractors</title>
+/* PROGRESS BAR */
+#progress-bar{position:fixed;top:0;left:0;height:2px;z-index:9999;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0%;transition:width .1s linear;}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+/* ── HERO ── */
+.page-hero{
+  position:relative;width:100%;height:420px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.hero-img-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;transform:scale(1.04);animation:heroZ 14s ease-in-out infinite alternate;}
+@keyframes heroZ{from{transform:scale(1.04)}to{transform:scale(1.1)}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,40,.9) 0%,rgba(10,20,40,.55) 50%,rgba(10,20,40,.2) 100%);}
+.hero-grain{position:absolute;inset:0;pointer-events:none;opacity:.3;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");}
+.page-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;z-index:3;background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold-light) 60%,transparent);}
+.hero-bread{position:absolute;top:20px;left:40px;display:flex;align-items:center;gap:8px;font-size:.75rem;color:rgba(255,255,255,.45);z-index:2;}
+.hero-bread a{color:#e2c97e;transition:.2s;}.hero-bread a:hover{color:#fff;}
+.hero-content{position:relative;z-index:2;padding:0 24px;animation:fadeUp .8s var(--ease) .1s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-eye{color:var(--gold);font-size:.76rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:9px;}
+.hero-eye::before,.hero-eye::after{content:'';width:28px;height:1px;background:var(--gold);}
+.hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;color:#fff;line-height:1.12;margin-bottom:16px;text-shadow:0 4px 30px rgba(0,0,0,.3);}
+.hero-content h1 em{font-style:italic;color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:400;}
+.hero-content p{color:rgba(255,255,255,.72);font-size:1rem;max-width:520px;margin:0 auto 28px;line-height:1.78;}
+.hero-cta{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:var(--blue);padding:13px 34px;border-radius:30px;border:none;font-size:.92rem;font-weight:800;letter-spacing:.3px;box-shadow:0 6px 22px rgba(201,168,76,.45);transition:.3s var(--ease);}
+.hero-cta:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.55);}
 
-    <!-- Basic SEO -->
-    <meta name="description" content="MBUILD Developers – Dream Big, Build Right.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* ── SECTION INTRO ── */
+.sec-intro{background:var(--beige);padding:60px 60px 40px;text-align:center;}
+.sec-eye{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-size:.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;}
+.sec-eye::before,.sec-eye::after{content:'';width:26px;height:1.5px;background:var(--gold);}
+.sec-intro h2{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:800;color:var(--blue);margin-bottom:14px;}
+.sec-intro p{color:var(--text-muted);font-size:.96rem;max-width:600px;margin:0 auto;line-height:1.78;}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/images/logo_new.png">
+/* ── SERVICES GRID ── */
+.services-section{background:var(--beige);padding:20px 60px 80px;}
+.services-grid-wrap{display:flex;flex-direction:column;gap:0;}
+
+/* ── SERVICE BLOCK ── */
+.service-block {
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:0;
+  background:var(--white);
+  overflow:hidden;
+  transition:box-shadow .4s var(--ease);
+  position:relative;
+  max-width:1300px;
+  margin-left:auto;
+  margin-right:auto;
+  border-radius:20px !important;
+  margin: bottom 45px;
+  
+  
+}
+.service-block:first-child{border-radius:20px;}
+.service-block:last-child{border-radius:20px;}
+.service-block:not(:last-child){border-bottom:none;}
+.service-block:hover{box-shadow:var(--shadow-lg);z-index:2;}
+.service-block.reverse{direction:rtl;}
+.service-block.reverse > *{direction:ltr;}
+
+/* Image side */
+.sb-image{position:relative;height:430px;padding:0 16px 16px 0;}
+.sb-image img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .8s var(--ease);border-radius:14px;box-shadow:14px 14px 0px var(--gold);display:block;}
+.service-block:hover .sb-image img{transform:scale(1.05);}
 
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+/* Number overlay */
+.sb-num{position:absolute;bottom:20px;right:24px;z-index:2;font-family:'Playfair Display',serif;font-size:5rem;font-weight:800;color:rgba(255,255,255,.12);line-height:1;pointer-events:none;}
+.service-block.reverse .sb-num{right:auto;left:24px;}.service-block.reverse .sb-image{padding:0 0 16px 16px;}.service-block.reverse .sb-image img{box-shadow:-14px 14px 0px var(--gold);}
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    
+/* Text side */
+.sb-text{padding:56px 64px;}
+.sb-icon{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:22px;transition:.4s var(--ease);}
+.service-block:hover .sb-icon{background:linear-gradient(135deg,var(--gold-dark),var(--gold));}
+.sb-tag{display:inline-block;background:var(--beige2);color:var(--gold);font-size:.7rem;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;}
+.sb-text h3{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:800;color:var(--blue);margin-bottom:14px;line-height:1.2;}
+.sb-text p{font-size:1.2rem;color:var(--text-muted);line-height:1.82;margin-bottom:22px;}
+.sb-checklist{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.sb-checklist li{display:flex;align-items:center;gap:11px;font-size:.88rem;color:var(--text);font-weight:500;}
+.sb-checklist li i{color:var(--gold);font-size:1.5rem;flex-shrink:0;}
+.sb-link{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.82rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--blue);padding-bottom:3px;
+  border-bottom:2px solid var(--blue);transition:.3s;
+}
+.sb-link:hover{color:var(--gold);border-color:var(--gold);gap:14px;}
 
+/* ── FEATURE STATS ── */
+.feature-stats{background:var(--blue);padding:52px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.fstat{display:flex;flex-direction:column;align-items:center;padding:20px 16px;text-align:center;border-right:1px solid rgba(255,255,255,.1);transition:.2s;}
+.fstat:last-child{border-right:none;}
+.fstat:hover{background:rgba(255,255,255,.04);}
+.fstat-icon{font-size:1.7rem;margin-bottom:12px;}
+.fstat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:800;color:var(--gold);line-height:1;margin-bottom:5px;}
+.fstat-label{font-size:.77rem;color:rgba(255,255,255,.6);font-weight:500;letter-spacing:.3px;}
+
+/* ── CTA ── */
+.cta-section{background:var(--navy);padding:96px 60px;text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(201,168,76,.07) 1px,transparent 1px);background-size:28px 28px;}
+.cta-section::after{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.1) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;}
+.cta-eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;}
+.cta-eyebrow::before,.cta-eyebrow::after{content:'';width:28px;height:1px;background:var(--gold);}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:800;color:#fff;margin-bottom:16px;line-height:1.15;}
+.cta-section h2 em{font-style:italic;color:var(--gold);}
+.cta-section p{color:rgba(255,255,255,.65);font-size:.97rem;max-width:500px;margin:0 auto 40px;line-height:1.8;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-cta-gold{background:var(--gold);color:var(--blue);border:none;padding:15px 38px;border-radius:8px;font-size:.93rem;font-weight:800;transition:.3s var(--ease);box-shadow:0 8px 28px rgba(201,168,76,.4);}
+.btn-cta-gold:hover{background:var(--gold-light);transform:translateY(-3px);box-shadow:0 14px 38px rgba(201,168,76,.52);}
+.btn-cta-call{background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.25);padding:15px 38px;border-radius:8px;font-size:.93rem;font-weight:700;transition:.3s;}
+.btn-cta-call:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:9000;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.5);animation:waPulse 2.5s infinite;transition:transform .2s;}
+.wa-float:hover{transform:scale(1.1) rotate(-6deg);animation:none;}
+.wa-tt{position:absolute;right:68px;white-space:nowrap;background:var(--navy);color:#fff;padding:7px 14px;border-radius:8px;font-size:.75rem;opacity:0;transform:translateX(8px);transition:.25s;pointer-events:none;}
+.wa-float:hover .wa-tt{opacity:1;transform:translateX(0);}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.5);}50%{box-shadow:0 6px 40px rgba(37,211,102,.7),0 0 0 9px rgba(37,211,102,.08);}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s var(--ease),transform .75s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-r{opacity:0;transform:translateX(30px);transition:opacity .75s var(--ease),transform .75s var(--ease);}
+.reveal-r.in{opacity:1;transform:translateX(0);}
+.reveal-l{opacity:0;transform:translateX(-30px);transition:opacity .75s var(--ease),transform .75s var(--ease);}
+.reveal-l.in{opacity:1;transform:translateX(0);}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .sb-text{padding:44px 48px;}
+  .services-section{padding:20px 30px 70px;}
+  .sec-intro{padding:56px 30px 36px;}
+  .feature-stats{padding:44px 30px;}
+  .cta-section{padding:80px 30px;}
+}
+@media(max-width:900px){
+  .service-block,.service-block.reverse{grid-template-columns:1fr;direction:ltr;}
+  .service-block.reverse>*{direction:ltr;}
+  .sb-image{height:300px;}
+  .sb-text{padding:40px 32px;}
+  .sb-text h3{font-size:1.5rem;}
+  .feature-stats{grid-template-columns:repeat(2,1fr);}
+  .fstat{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}
+  .fstat:nth-child(odd){border-right:1px solid rgba(255,255,255,.1);}
+  .fstat:nth-last-child(-n+2){border-bottom:none;}
+  .page-hero{height:340px;}
+  .hero-content h1{font-size:1.9rem;}
+  .hero-bread{left:20px;}
+}
+@media(max-width:600px){
+  .sb-text{padding:32px 22px;}
+  .sec-intro{padding:48px 20px 28px;}
+  .services-section{padding:16px 16px 56px;}
+  .feature-stats{grid-template-columns:1fr 1fr;}
+  .cta-section{padding:64px 20px;}
+  .cta-section h2{font-size:2rem;}
+  .cta-btns{flex-direction:column;align-items:center;}
+  .btn-cta-gold,.btn-cta-call{width:100%;max-width:300px;}
+}
+</style>
 </head>
-
 <body>
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="logo">
-            <h1 class="outline-text">MBUILD DEVELOPERS</h1>
-            <div class="subtitle-badge">
-                <p class="tagline">Architecture, Engineer & Contractors</p>
-            </div>
-        </div>
+<div id="progress-bar"></div>
 
-        <nav class="navbar">
-            <a href="../index.html">Home</a>
-            <a href="Our-product-Services.html">Our Products & Services</a>
-            <a href="Civil-Projects.html">Civil Projects</a>
-            <a href="Interior-projects.html">Interior Projects</a>
-            <a href="Photo-Gallary.html">Photo Gallery</a>
-            <a href="Contact-Us.html">Contact Us</a>
-            <a href="Certificates.html">Certificates</a>
-        </nav>
-    </header>
+<!-- WA FLOAT -->
+<a class="wa-float" href="https://wa.me/918600928493" target="_blank">
+  <span class="wa-tt">Chat with us →</span>💬
+</a>
 
-    <!-- HERO SECTION -->
-    <section class="page-hero" style="background-image: url('../assets/images/houses/project_2/img_3.jpeg');">
-        <div class="page-hero-content">
-            <h3>OUR EXPERTISE</h3>
-            <h1>Our Products & Services</h1>
-            <p>Delivering quality construction solutions, expert engineering<br>&<br>innovative architectural design.
-            </p>
-            <a href="#services-section" class="btn button-15">Explore Services</a>
-        </div>
-    </section>
+<!-- HEADER -->
+<header class="main-header">
+  <div class="logo">
+    <h1 class="outline-text">MBUILD DEVELOPERS</h1>
+    <div class="subtitle-badge"><p class="tagline">Architecture, Engineer &amp; Contractors</p></div>
+  </div>
+  <nav class="navbar">
+    <a href="../index.html">Home</a>
+    <a href="Our-product-Services.html" class="active">Our Products &amp; Services</a>
+    <a href="Civil-Projects.html">Civil Projects</a>
+    <a href="Interior-projects.html">Interior Projects</a>
+    <a href="Photo-Gallary.html">Photo Gallery</a>
+    <a href="Contact-Us.html">Contact Us</a>
+    <a href="Certificates.html">Certificates</a>
+  </nav>
+</header>
 
-    <section class="services-section" id="services-section">
+<!-- HERO -->
+<div class="page-hero">
+  <img class="hero-img-bg" src="../assets/images/houses/project_2/img_3.jpeg" alt="Our Services"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-bread">
+    <a href="../index.html">Home</a><span>›</span>
+    <span style="color:rgba(255,255,255,.7)">Our Products &amp; Services</span>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eye">Our Expertise</div>
+    <h1>Our Products &amp;<br/><em>Services</em></h1>
+    <p>Delivering quality construction solutions, expert engineering &amp; innovative architectural design across Maharashtra.</p>
+    <a href="#services" class="hero-cta">Explore Services ↓</a>
+  </div>
+</div>
 
-        <!-- SERVICE 1: RESIDENTIAL Construction -->
-        <div class="service-block">
-            <div class="service-text">
-                <div class="service-icon-title">
-                    <div class="service-icon-box"><i class="fas fa-building"></i></div>
-                    <h3>Residential Construction</h3>
-                </div>
-                <p>We build robust civil structures from ground up — residential buildings, commercial complexes, and
-                    industrial facilities with structural excellence and timely delivery.</p>
-                <ul class="service-checklist">
-                    <li><i class="fas fa-circle-check"></i> Residential Buildings</li>
-                    <li><i class="fas fa-circle-check"></i> Commercial Complexes</li>
-                    <li><i class="fas fa-circle-check"></i> Industrial Facilities</li>
-                    <li><i class="fas fa-circle-check"></i> RCC & Load-bearing Structures</li>
-                </ul>
-                <a href="Contact-Us.html" class="discuss-link">Discuss Your Project &nbsp;→</a>
-            </div>
-            <div class="service-image">
-                <img src="../assets/images/houses/project_15.jpeg" alt="Civil Construction">
-            </div>
-        </div>
+<!-- SECTION INTRO -->
+<div class="sec-intro" id="services">
+  <div class="sec-eye reveal">What We Deliver</div>
+  <h2 class="reveal">End-to-End Construction Solutions</h2>
+  <p class="reveal">From the first blueprint to the final handover, mBuild Developers manages every phase of your project with certified engineers, transparent pricing, and on-time delivery.</p>
+</div>
 
-        <!-- SERVICE 2: Interior Design (image left) -->
-        <div class="service-block reverse">
-            <div class="service-text">
-                <div class="service-icon-title">
-                    <div class="service-icon-box"><i class="fas fa-couch"></i></div>
-                    <h3>Interior Design</h3>
-                </div>
-                <p>We craft beautiful, functional interiors tailored to your lifestyle — from modular kitchens and
-                    living rooms to full home and office design solutions.</p>
-                <ul class="service-checklist">
-                    <li><i class="fas fa-circle-check"></i> Modular Kitchens</li>
-                    <li><i class="fas fa-circle-check"></i> Living & Bedroom Design</li>
-                    <li><i class="fas fa-circle-check"></i> False Ceiling & Lighting</li>
-                    <li><i class="fas fa-circle-check"></i> Office Interiors</li>
-                </ul>
-                <a href="Contact-Us.html" class="discuss-link">Discuss Your Project &nbsp;→</a>
-            </div>
-            <div class="service-image">
-                <img src="../assets/images/Interior_Projects/inte_project6.jpeg" alt="Interior Design">
-            </div>
-        </div>
+<!-- SERVICES -->
+<section class="services-section">
+  <div class="services-grid-wrap">
 
-        <!-- SERVICE 3: Architectural Planning -->
-        <div class="service-block">
-            <div class="service-text">
-                <div class="service-icon-title">
-                    <div class="service-icon-box"><i class="fas fa-drafting-compass"></i></div>
-                    <h3>Architectural Planning</h3>
-                </div>
-                <p>Our architects bring your vision to life with detailed blueprints, 3D designs, and smart space
-                    planning — ensuring beauty, functionality, and compliance.</p>
-                <ul class="service-checklist">
-                    <li><i class="fas fa-circle-check"></i> 2D & 3D Floor Plans</li>
-                    <li><i class="fas fa-circle-check"></i> Elevation Design</li>
-                    <li><i class="fas fa-circle-check"></i> Site Layout Planning</li>
-                    <li><i class="fas fa-circle-check"></i> Building Approvals Support</li>
-                </ul>
-                <a href="Contact-Us.html" class="discuss-link">Discuss Your Project &nbsp;→</a>
-            </div>
-            <div class="service-image">
-                <img src="../assets/images/houses/project_2/img_3.jpeg" alt="Architectural Planning">
-            </div>
-        </div>
+    <!-- 1 · Residential Construction -->
+    <div class="service-block">
+      <div class="sb-text reveal-l">
+        <div class="sb-icon"><i class="fas fa-building" style="color:#fff"></i></div>
+        <span class="sb-tag">Civil Works</span>
+        <h3>Residential Construction</h3>
+        <p>We build robust civil structures from the ground up — residential buildings, commercial complexes, and industrial facilities with structural excellence and timely delivery.</p>
+        <ul class="sb-checklist">
+          <li><i class="fas fa-circle-check"></i>Residential Buildings &amp; Bungalows</li>
+          <li><i class="fas fa-circle-check"></i>Commercial Complexes</li>
+          <li><i class="fas fa-circle-check"></i>Industrial Facilities</li>
+          <li><i class="fas fa-circle-check"></i>RCC &amp; Load-bearing Structures</li>
+        </ul>
+        <a href="Contact-Us.html" class="sb-link">Discuss Your Project →</a>
+      </div>
+      <div class="sb-image reveal-r">
+        <img src="../assets/images/houses/project_15.jpeg" alt="Residential Construction" loading="lazy"/>
+        <span class="sb-num">01</span>
+      </div>
+    </div>
 
-        <!-- SERVICE 4: Renovations (image left) -->
-        <div class="service-block reverse">
-            <div class="service-text">
-                <div class="service-icon-title">
-                    <div class="service-icon-box"><i class="fas fa-hammer"></i></div>
-                    <h3>Renovations & Remodelling</h3>
-                </div>
-                <p>Transform your existing space with our expert renovation services — from structural repairs and
-                    extensions to complete interior makeovers.</p>
-                <ul class="service-checklist">
-                    <li><i class="fas fa-circle-check"></i> Home Renovations</li>
-                    <li><i class="fas fa-circle-check"></i> Room Extensions</li>
-                    <li><i class="fas fa-circle-check"></i> Flooring & Tiling</li>
-                    <li><i class="fas fa-circle-check"></i> Painting & Finishing</li>
-                </ul>
-                <a href="Contact-Us.html" class="discuss-link">Discuss Your Project &nbsp;→</a>
-            </div>
-            <div class="service-image">
-                <img src="../assets/images/houses/project_4/img_1.jpg" alt="Renovations">
-            </div>
-        </div>
+    <!-- 2 · Interior Design (reversed) -->
+    <div class="service-block reverse">
+      <div class="sb-text reveal-r">
+        <div class="sb-icon"><i class="fas fa-couch" style="color:#fff"></i></div>
+        <span class="sb-tag">Interiors</span>
+        <h3>Interior Design</h3>
+        <p>We craft beautiful, functional interiors tailored to your lifestyle — from modular kitchens and living rooms to full home and corporate office design solutions.</p>
+        <ul class="sb-checklist">
+          <li><i class="fas fa-circle-check"></i>Modular Kitchens &amp; Wardrobes</li>
+          <li><i class="fas fa-circle-check"></i>Living Room &amp; Bedroom Design</li>
+          <li><i class="fas fa-circle-check"></i>False Ceiling &amp; Ambient Lighting</li>
+          <li><i class="fas fa-circle-check"></i>Office &amp; Clinic Interiors</li>
+        </ul>
+        <a href="Interior-projects.html" class="sb-link">View Interior Projects →</a>
+      </div>
+      <div class="sb-image reveal-l">
+        <img src="../assets/images/Interior_Projects/inte_project6.jpeg" alt="Interior Design" loading="lazy"/>
+        <span class="sb-num">02</span>
+      </div>
+    </div>
 
-        <!-- SERVICE 5: Project Management -->
-        <div class="service-block">
-            <div class="service-text">
-                <div class="service-icon-title">
-                    <div class="service-icon-box"><i class="fas fa-chart-gantt"></i></div>
-                    <h3>Project Management</h3>
-                </div>
-                <p>We handle end-to-end project management — budgeting, scheduling, contractor coordination, and quality
-                    control — so your project is delivered on time and within budget.</p>
-                <ul class="service-checklist">
-                    <li><i class="fas fa-circle-check"></i> Budget Planning & Control</li>
-                    <li><i class="fas fa-circle-check"></i> Timeline Management</li>
-                    <li><i class="fas fa-circle-check"></i> Contractor Coordination</li>
-                    <li><i class="fas fa-circle-check"></i> Quality Assurance</li>
-                </ul>
-                <a href="Contact-Us.html" class="discuss-link">Discuss Your Project &nbsp;→</a>
-            </div>
-            <div class="service-image">
-                <img src="../assets/images/mill_Project/mill_img.jpg" alt="Project Management">
-            </div>
-        </div>
+    <!-- 3 · Architectural Planning -->
+    <div class="service-block">
+      <div class="sb-text reveal-l">
+        <div class="sb-icon"><i class="fas fa-drafting-compass" style="color:#fff"></i></div>
+        <span class="sb-tag">Planning</span>
+        <h3>Architectural Planning</h3>
+        <p>Our architects bring your vision to life with detailed blueprints, 3D designs, and smart space planning — ensuring beauty, functionality, and code compliance.</p>
+        <ul class="sb-checklist">
+          <li><i class="fas fa-circle-check"></i>2D &amp; 3D Floor Plans</li>
+          <li><i class="fas fa-circle-check"></i>Elevation &amp; Façade Design</li>
+          <li><i class="fas fa-circle-check"></i>Site Layout &amp; Space Planning</li>
+          <li><i class="fas fa-circle-check"></i>Building Approval Support</li>
+        </ul>
+        <a href="Contact-Us.html" class="sb-link">Discuss Your Project →</a>
+      </div>
+      <div class="sb-image reveal-r">
+        <img src="../assets/images/houses/project_2/img_3.jpeg" alt="Architectural Planning" loading="lazy"/>
+        <span class="sb-num">03</span>
+      </div>
+    </div>
 
-    </section>
+    <!-- 4 · Renovations (reversed) -->
+    <div class="service-block reverse">
+      <div class="sb-text reveal-r">
+        <div class="sb-icon"><i class="fas fa-hammer" style="color:#fff"></i></div>
+        <span class="sb-tag">Renovations</span>
+        <h3>Renovations &amp; Remodelling</h3>
+        <p>Transform your existing space with our expert renovation services — from structural repairs and room extensions to complete interior makeovers with premium finishes.</p>
+        <ul class="sb-checklist">
+          <li><i class="fas fa-circle-check"></i>Complete Home Renovations</li>
+          <li><i class="fas fa-circle-check"></i>Room Extensions &amp; Add-ons</li>
+          <li><i class="fas fa-circle-check"></i>Premium Flooring &amp; Tiling</li>
+          <li><i class="fas fa-circle-check"></i>Painting &amp; Surface Finishing</li>
+        </ul>
+        <a href="Contact-Us.html" class="sb-link">Discuss Your Project →</a>
+      </div>
+      <div class="sb-image reveal-l">
+        <img src="../assets/images/houses/project_4/img_1.jpg" alt="Renovations" loading="lazy"/>
+        <span class="sb-num">04</span>
+      </div>
+    </div>
 
-    <!-- ===== END OF SERVICES SECTION ===== -->
+    <!-- 5 · Project Management -->
+    <div class="service-block">
+      <div class="sb-text reveal-l">
+        <div class="sb-icon"><i class="fas fa-chart-gantt" style="color:#fff"></i></div>
+        <span class="sb-tag">Management</span>
+        <h3>Project Management</h3>
+        <p>We handle end-to-end project management — budgeting, scheduling, contractor coordination, and quality control — so your project is delivered on time and within budget.</p>
+        <ul class="sb-checklist">
+          <li><i class="fas fa-circle-check"></i>Budget Planning &amp; Cost Control</li>
+          <li><i class="fas fa-circle-check"></i>Timeline &amp; Milestone Management</li>
+          <li><i class="fas fa-circle-check"></i>Contractor &amp; Vendor Coordination</li>
+          <li><i class="fas fa-circle-check"></i>Quality Assurance &amp; Inspection</li>
+        </ul>
+        <a href="Contact-Us.html" class="sb-link">Discuss Your Project →</a>
+      </div>
+      <div class="sb-image reveal-r">
+        <img src="../assets/images/mill_Project/mill_img.jpg" alt="Project Management" loading="lazy"/>
+        <span class="sb-num">05</span>
+      </div>
+    </div>
 
-    <!-- CTA BANNER -->
-    <section class="cta-banner">
-        <div class="cta-content">
-            <div class="cta-text">
-                <p class="cta-label">Ready to Build Your Dream?</p>
-                <h2>Get a Free Quote Today</h2>
-                <p class="cta-sub">Talk to our experts — no commitment, no charges. Just bring your idea.</p>
-            </div>
-            <div class="cta-buttons">
-                <a href="Contact-Us.html" class="cta-btn-primary">📋 Request Free Quote</a>
-                <a href="tel:+918600928493" class="cta-btn-secondary">📞 Call Us Now</a>
-            </div>
-        </div>
-    </section>
+  </div>
+</section>
 
-    <!-- ===== END CTA BANNER ===== -->
+<!-- FEATURE STATS -->
+<div class="feature-stats">
+  <div class="fstat reveal"><div class="fstat-icon">🏗️</div><div class="fstat-num">250+</div><div class="fstat-label">Projects Completed</div></div>
+  <div class="fstat reveal d1"><div class="fstat-icon">📅</div><div class="fstat-num">9+</div><div class="fstat-label">Years Experience</div></div>
+  <div class="fstat reveal d2"><div class="fstat-icon">😊</div><div class="fstat-num">200+</div><div class="fstat-label">Happy Clients</div></div>
+  <div class="fstat reveal d3"><div class="fstat-icon">⭐</div><div class="fstat-num">100%</div><div class="fstat-label">Quality Commitment</div></div>
+</div>
 
-    <!--footer-->
-    <footer class="footer">
-        <div class="footer-container">
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <div class="cta-eyebrow">Ready to Build?</div>
+    <h2>Get a <em>Free Quote</em> Today</h2>
+    <p>Talk to our experts — no commitment, no charges. Just bring your idea and we'll handle the rest from first sketch to final handover.</p>
+    <div class="cta-btns">
+      <a href="Contact-Us.html"><button class="btn-cta-gold">📋 Request Free Quote →</button></a>
+      <a href="tel:+918600928493"><button class="btn-cta-call">📞 Call Us Now</button></a>
+    </div>
+  </div>
+</section>
 
-            <!-- Brand -->
-            <div class="footer-col">
-                <div class="brand">
-                    <img src="../assets/images/logo_new.png" alt="MBUILD Developers">
-                    <div>
-                        <h2>MBUILD</h2>
-                        <span>DEVELOPERS</span>
-                    </div>
-                </div>
-                <h4><strong>(Dream Big Build Right)</strong></h4>
-                <p>
-                    Leading the way in construction excellence. We build residential
-                    and commercial spaces that stand the test of time, combining
-                    modern design with solid engineering.
-                </p>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <div class="brand">
+        <img src="../assets/images/logo_new.png" alt="MBUILD Developers"/>
+        <div><h2>MBUILD</h2><span>DEVELOPERS</span></div>
+      </div>
+      <h4><strong>(Dream Big Build Right)</strong></h4>
+      <p>Leading the way in construction excellence. We build residential and commercial spaces that stand the test of time, combining modern design with solid engineering.</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/your_facebook" target="_blank"><img src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"/></a>
+        <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank"><img src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"/></a>
+        <a href="https://wa.me/918600928493" target="_blank"><img src="../assets/images/Whatsapp.png" class="social-icon" alt="Whatsapp"/></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="Our-product-Services.html">Our Products &amp; Services</a></li>
+        <li><a href="Civil-Projects.html">Civil Projects</a></li>
+        <li><a href="Interior-projects.html">Interior Projects</a></li>
+        <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
+        <li><a href="Certificates.html">Certificates</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Our Services</h3>
+      <ul>
+        <li>Civil Construction</li>
+        <li>Interior Design</li>
+        <li>Renovations</li>
+        <li>Architectural Planning</li>
+        <li>Project Management</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Contact Us</h3>
+      <ul class="contact-list">
+        <li><i class="fas fa-location-dot"></i><span>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus,<br/>Sangli – 416309, Maharashtra, India</span></li>
+        <li><i class="fas fa-phone"></i><span>+91 86009 28493<br/>+91 86691 56263</span></li>
+        <li><i class="fas fa-envelope"></i><span>mbuiltsangli@gmail.com<br/>mbuilddevelopers@gmail.com</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 All Rights Reserved by MBUILD DEVELOPERS.</div>
+</footer>
 
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/your_facebook" target="_blank" aria-label="Facebook"><img
-                            src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"></a>
-                    <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank" aria-label="Instagram"><img
-                            src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"></a>
-                    <a href="https://wa.me/918600928493" target="_blank" aria-label="WhatsApp"><img
-                            src="../assets/images/Whatsapp.png" class="social-icon" alt="Whatsapp"></a>
-                </div>
+<script>
+/* PROGRESS BAR */
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  document.getElementById('progress-bar').style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+},{passive:true});
 
-            </div>
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
+},{threshold:0.07});
+document.querySelectorAll('.reveal,.reveal-r,.reveal-l').forEach(el=>obs.observe(el));
 
-            <!-- Quick Links -->
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="Our-product-Services.html">Our Products & Services</a></li>
-                    <li><a href="Civil-Projects.html">Civil Projects</a></li>
-                    <li><a href="Interior-projects.html">Interior projects</a></li>
-                    <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
-                    <li><a href="Certificates.html">Certificates</a></li>
-                </ul>
-            </div>
-
-            <!-- Services -->
-            <div class="footer-col">
-                <h3>Our Services</h3>
-                <ul>
-                    <li>Civil Construction</li>
-                    <li>Interior Design</li>
-                    <li>Renovations</li>
-                    <li>Architectural Planning</li>
-                    <li>Project Management</li>
-                </ul>
-            </div>
-
-            <!-- Contact -->
-            <div class="footer-col">
-                <h3>Contact Us</h3>
-                <ul class="contact-list">
-                    <li>
-                        <i class="fas fa-location-dot"></i>
-                        <span>
-                            Main Road, Behind AK Mobiles,<br>
-                            Kundal, Tal. Palus,<br>
-                            Sangli – 416309,<br>
-                            Maharashtra, India
-                        </span>
-                    </li>
-
-                    <li>
-                        <i class="fas fa-phone"></i>
-                        <span>
-                            +91 86009 28493
-                            <br>
-                            +91 86691 56263
-                        </span>
-                    </li>
-
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span>mbuiltsangli@gmail.com
-                            <br>
-                            mbuilddevelopers@gmail.com
-                        </span>
-                    </li>
-                </ul>
-
-            </div>
-
-        </div>
-
-        <div class="footer-bottom">
-            © 2026 All Rights Reserved by MBUILD DEVELOPERS.
-        </div>
-    </footer>
-
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+</script>
 </body>
-
 </html>

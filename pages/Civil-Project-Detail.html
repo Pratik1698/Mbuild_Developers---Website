@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Project Detail – MBUILD DEVELOPERS</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#c9a84c;--gold-light:#e2c97e;--blue:#1a3558;--blue2:#254a78;
+  --navy:#0d1f35;--text-muted:#7a7060;--bg:#d8eaf0;--white:#fff;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);overflow-x:hidden;font-family:'DM Sans',sans-serif;}
+img{display:block;}
+a{text-decoration:none;}
+button{cursor:pointer;}
+
+/* ── HERO ── */
+.detail-hero{position:relative;width:100%;height:480px;overflow:hidden;display:flex;align-items:flex-end;}
+.detail-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center ;}
+.detail-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,31,53,.92) 0%,rgba(13,31,53,.4) 60%,transparent 100%);}
+.hero-bread{position:absolute;top:20px;left:40px;display:flex;align-items:center;gap:8px;font-size:.75rem;color:rgba(255,255,255,.5);z-index:2;}
+.hero-bread a{color:#e2c97e;transition:.2s;}
+.hero-bread a:hover{color:#fff;}
+.detail-hero-content{position:relative;z-index:2;padding:0 60px 44px;width:100%;}
+.detail-cat-badge{display:inline-block;background:var(--gold);color:var(--blue);font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:14px;}
+.detail-hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:10px;text-shadow:0 2px 20px rgba(0,0,0,.3);}
+.detail-hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;}
+.detail-hero-meta span{display:flex;align-items:center;gap:7px;font-size:.82rem;color:rgba(255,255,255,.65);}
+.detail-hero-meta i{color:var(--gold);font-size:.85rem;}
+
+/* ── LAYOUT ── */
+.detail-layout{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:44px 60px 60px;max-width:1400px;margin:0 auto;}
+.detail-main{}
+.detail-sidebar{}
+
+/* ── PROJECT INFO CARD ── */
+.info-card{background:var(--white);border-radius:18px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:28px;}
+.info-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:10px;}
+.info-card h3 i{color:var(--gold);font-size:1rem;}
+.info-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f0ece2;}
+.info-row:last-child{border-bottom:none;}
+.info-label{font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;min-width:120px;flex-shrink:0;padding-top:2px;}
+.info-value{font-size:.9rem;color:var(--blue);font-weight:600;line-height:1.5;}
+
+/* ── PROJECT DESCRIPTION ── */
+.desc-card{background:var(--white);border-radius:18px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:28px;}
+.desc-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:10px;}
+.desc-card h3 i{color:var(--gold);}
+.desc-card p{font-size:.92rem;color:var(--text-muted);line-height:1.85;margin-bottom:14px;}
+.desc-card p:last-child{margin-bottom:0;}
+.feature-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.feature-item{display:flex;align-items:center;gap:9px;font-size:.85rem;color:var(--blue);font-weight:500;background:#f8f5ef;padding:10px 14px;border-radius:10px;}
+.feature-item i{color:var(--gold);font-size:.9rem;flex-shrink:0;}
+
+/* ── PHOTO GALLERY ── */
+.photos-section{background:var(--bg);padding:0 60px 60px;}
+.photos-header{padding:44px 0 28px;display:flex;align-items:flex-end;justify-content:space-between;}
+.photos-header h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;color:var(--blue);}
+.photos-header p{font-size:.88rem;color:var(--text-muted);}
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.photo-item{border-radius:14px;overflow:hidden;cursor:pointer;position:relative;box-shadow:0 4px 16px rgba(0,0,0,.1);transition:.35s;}
+.photo-item:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(26,53,88,.2);}
+.photo-item:first-child{grid-column:span 2;}
+.photo-item img{width:100%;height:260px;object-fit:cover;transition:transform .6s var(--ease-out);}
+.photo-item:first-child img{height:340px;}
+.photo-item:hover img{transform:scale(1.05);}
+.photo-overlay{position:absolute;inset:0;background:rgba(13,31,53,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s;}
+.photo-item:hover .photo-overlay{opacity:1;}
+.photo-zoom{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;}
+
+/* ── SIDEBAR ── */
+.sidebar-card{background:var(--white);border-radius:18px;padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:24px;position:sticky;top:20px;}
+.sidebar-card h4{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--blue);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #f0ece2;}
+.cost-display{text-align:center;padding:16px 0 8px;}
+.cost-display .c-label{font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.cost-display .c-value{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;color:var(--gold);}
+.cost-display .c-sub{font-size:.78rem;color:var(--text-muted);margin-top:4px;}
+.sidebar-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.s-stat{background:#f8f5ef;border-radius:10px;padding:12px;text-align:center;}
+.s-stat .sv{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--blue);}
+.s-stat .sl{font-size:.68rem;color:var(--text-muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+.sidebar-divider{height:1px;background:#f0ece2;margin:16px 0;}
+.contact-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;border-radius:10px;font-size:.88rem;font-weight:800;font-family:'DM Sans',sans-serif;transition:.2s;margin-bottom:10px;}
+.contact-btn.primary{background:var(--gold);color:var(--blue);border:none;}
+.contact-btn.primary:hover{background:var(--gold-light);transform:translateY(-1px);}
+.contact-btn.wa{background:rgba(37,211,102,.1);color:#1a7a40;border:1.5px solid rgba(37,211,102,.3);}
+.contact-btn.wa:hover{background:rgba(37,211,102,.2);}
+.back-btn{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:.82rem;font-weight:600;margin-bottom:0;transition:.2s;padding:10px 0;}
+.back-btn:hover{color:var(--blue);}
+.back-btn i{font-size:.75rem;}
+
+/* ── RELATED PROJECTS ── */
+.related-section{padding:0 60px 72px;}
+.related-header{padding-bottom:28px;}
+.related-header h2{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:var(--blue);margin-bottom:6px;}
+.related-header p{font-size:.88rem;color:var(--text-muted);}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.related-card{border-radius:14px;overflow:hidden;background:var(--white);box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;transition:.3s;text-decoration:none;display:block;}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(26,53,88,.16);}
+.related-card img{width:100%;height:180px;object-fit:cover;transition:transform .5s var(--ease-out);}
+.related-card:hover img{transform:scale(1.05);}
+.related-info{padding:16px 18px 18px;}
+.related-cat{font-size:.66rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.related-title{font-family:'Playfair Display',serif;font-size:.97rem;color:var(--blue);font-weight:700;line-height:1.3;margin-bottom:4px;}
+.related-cost{font-size:.78rem;color:var(--text-muted);font-weight:600;}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:9000;background:rgba(8,16,28,.96);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lb-container{position:relative;max-width:92vw;max-height:88vh;border-radius:14px;overflow:hidden;transform:scale(.94);transition:transform .4s var(--ease-out);box-shadow:0 40px 100px rgba(0,0,0,.6);}
+.lightbox.open .lb-container{transform:scale(1);}
+.lb-container img{max-width:92vw;max-height:84vh;object-fit:contain;display:block;}
+.lb-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:.2s;backdrop-filter:blur(4px);}
+.lb-close:hover{background:rgba(255,255,255,.22);}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:.25s;backdrop-filter:blur(4px);}
+.lb-nav:hover{background:rgba(255,255,255,.22);transform:translateY(-50%) scale(1.08);}
+.lb-prev{left:14px;}.lb-next{right:14px;}
+.lb-counter{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:#fff;font-size:.75rem;font-weight:600;padding:5px 16px;border-radius:20px;backdrop-filter:blur(4px);}
+
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:8000;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.5);animation:waPulse 2.5s infinite;transition:transform .2s;}
+.wa-float:hover{transform:scale(1.1);animation:none;}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.5);}50%{box-shadow:0 6px 40px rgba(37,211,102,.75),0 0 0 10px rgba(37,211,102,.08);}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .detail-layout{grid-template-columns:1fr;padding:32px 30px 40px;}
+  .detail-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .sidebar-card{position:static;}
+  .photos-section,.related-section{padding-left:30px;padding-right:30px;}
+  .detail-hero-content{padding:0 30px 36px;}
+  .hero-bread{left:30px;}
+}
+@media(max-width:768px){
+  .detail-hero{height:340px;}
+  .detail-hero-content h1{font-size:1.6rem;}
+  .detail-hero-content{padding:0 20px 28px;}
+  .hero-bread{left:20px;}
+  .detail-layout{padding:24px 16px 32px;grid-template-columns:1fr;}
+  .detail-sidebar{grid-template-columns:1fr;}
+  .photos-section,.related-section{padding-left:16px;padding-right:16px;}
+  .photos-grid{grid-template-columns:1fr 1fr;}
+  .photo-item:first-child{grid-column:1/-1;}
+  .feature-list{grid-template-columns:1fr;}
+  .related-grid{grid-template-columns:1fr 1fr;}
+  .detail-hero-meta{gap:14px;}
+}
+@media(max-width:480px){
+  .related-grid{grid-template-columns:1fr;}
+  .photos-grid{grid-template-columns:1fr;}
+  .photo-item:first-child{grid-column:auto;}
+}
+</style>
+</head>
+<body>
+
+<a class="wa-float" href="https://wa.me/918600928493" target="_blank">💬</a>
+
+<!-- HEADER -->
+<header class="main-header">
+  <div class="logo">
+    <h1 class="outline-text">MBUILD DEVELOPERS</h1>
+    <div class="subtitle-badge"><p class="tagline">Architecture, Engineer &amp; Contractors</p></div>
+  </div>
+  <nav class="navbar">
+    <a href="../index.html">Home</a>
+    <a href="Our-product-Services.html">Our Products &amp; Services</a>
+    <a href="Civil-Projects.html" class="active">Civil Projects</a>
+    <a href="Interior-projects.html">Interior Projects</a>
+    <a href="Photo-Gallary.html">Photo Gallery</a>
+    <a href="Contact-Us.html">Contact Us</a>
+    <a href="Certificates.html">Certificates</a>
+  </nav>
+</header>
+
+<!-- DYNAMIC HERO -->
+<div class="detail-hero" id="detailHero">
+  <img class="detail-hero-img" id="heroImg" src="" alt=""/>
+  <div class="detail-hero-overlay"></div>
+  <div class="hero-bread">
+    <a href="../index.html">Home</a><span>›</span>
+    <a href="Civil-Projects.html">Civil Projects</a><span>›</span>
+    <span id="breadTitle" style="color:rgba(255,255,255,.7)">Project</span>
+  </div>
+  <div class="detail-hero-content">
+    <span class="detail-cat-badge" id="heroCat">Category</span>
+    <h1 id="heroTitle">Project Title</h1>
+    <div class="detail-hero-meta">
+      <span><i class="fas fa-location-dot"></i><span id="heroLoc">Location</span></span>
+      <span><i class="fas fa-ruler-combined"></i><span id="heroArea">Area</span></span>
+      <span><i class="fas fa-indian-rupee-sign"></i><span id="heroCost">Cost</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL LAYOUT -->
+<div class="detail-layout">
+  <div class="detail-main">
+
+    <!-- Project Info -->
+    <div class="info-card">
+      <h3><i class="fas fa-clipboard-list"></i> Project Details</h3>
+      <div class="info-row"><span class="info-label">Client</span><span class="info-value" id="infoClient">—</span></div>
+      <div class="info-row"><span class="info-label">Consultant</span><span class="info-value" id="infoConsultant">—</span></div>
+      <div class="info-row"><span class="info-label">Location</span><span class="info-value" id="infoLocation">—</span></div>
+      <div class="info-row"><span class="info-label">Project Type</span><span class="info-value" id="infoType">—</span></div>
+      <div class="info-row"><span class="info-label">Structure</span><span class="info-value" id="infoStructure">—</span></div>
+      <div class="info-row"><span class="info-label">Total Area</span><span class="info-value" id="infoArea">—</span></div>
+      <div class="info-row"><span class="info-label">Project Cost</span><span class="info-value" id="infoCost">—</span></div>
+      <div class="info-row"><span class="info-label">Contractor</span><span class="info-value">Mbuild Developers</span></div>
+    </div>
+
+    <!-- Description -->
+    <div class="desc-card">
+      <h3><i class="fas fa-file-lines"></i> Project Description</h3>
+      <p id="descText">Loading project description...</p>
+      <div class="feature-list" id="featureList"></div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="detail-sidebar">
+    <div class="sidebar-card">
+      <h4>Project Investment</h4>
+      <div class="cost-display">
+        <div class="c-label">Total Project Cost</div>
+        <div class="c-value" id="sidebarCost">—</div>
+        <div class="c-sub">Inclusive of all works</div>
+      </div>
+      <div class="sidebar-stats">
+        <div class="s-stat"><div class="sv" id="sidebarArea">—</div><div class="sl">Total Area</div></div>
+        <div class="s-stat"><div class="sv" id="sidebarFloors">—</div><div class="sl">Structure</div></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <a href="Contact-Us.html"><button class="contact-btn primary">📋 Start Similar Project</button></a>
+      <a href="https://wa.me/918600928493" target="_blank"><button class="contact-btn wa">💬 WhatsApp Enquiry</button></a>
+      <div class="sidebar-divider"></div>
+      <a class="back-btn" href="Civil-Projects.html"><i class="fas fa-arrow-left"></i> Back to All Projects</a>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Our Credentials</h4>
+      <div class="info-row" style="border:none;padding:6px 0;"><span class="info-label" style="font-size:.7rem">Company</span><span class="info-value" style="font-size:.82rem">Mbuild Developers</span></div>
+      <div class="info-row" style="border:none;padding:6px 0;"><span class="info-label" style="font-size:.7rem">Est. Year</span><span class="info-value" style="font-size:.82rem">2016</span></div>
+      <div class="info-row" style="border:none;padding:6px 0;"><span class="info-label" style="font-size:.7rem">GST</span><span class="info-value" style="font-size:.82rem">27BAIPJ8787J1ZW</span></div>
+      <div class="info-row" style="border:none;padding:6px 0;"><span class="info-label" style="font-size:.7rem">PWD Class</span><span class="info-value" style="font-size:.82rem">Class V (2017–2027)</span></div>
+      <div class="info-row" style="border:none;padding:6px 0;"><span class="info-label" style="font-size:.7rem">Projects</span><span class="info-value" style="font-size:.82rem">200+ Completed</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO GALLERY -->
+<div class="photos-section">
+  <div class="photos-header">
+    <div>
+      <h2>Project Photos</h2>
+      <p>Click any photo to view full size</p>
+    </div>
+  </div>
+  <div class="photos-grid" id="photosGrid">
+    <!-- Dynamically injected -->
+  </div>
+</div>
+
+<!-- RELATED PROJECTS -->
+<div class="related-section">
+  <div class="related-header">
+    <h2>More Civil Projects</h2>
+    <p>Explore other projects by Mbuild Developers</p>
+  </div>
+  <div class="related-grid" id="relatedGrid">
+    <!-- Dynamically injected -->
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-counter" id="lbCounter">1/1</div>
+  <div class="lb-container">
+    <img id="lbImg" src="" alt=""/>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <div class="brand">
+        <img src="../assets/images/logo_new.png" alt="MBUILD Developers"/>
+        <div><h2>MBUILD</h2><span>DEVELOPERS</span></div>
+      </div>
+      <h4><strong>(Dream Big Build Right)</strong></h4>
+      <p>Leading the way in construction excellence. We build residential and commercial spaces that stand the test of time.</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/your_facebook" target="_blank"><img src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"/></a>
+        <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank"><img src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"/></a>
+        <a href="https://wa.me/918600928493" target="_blank"><img src="../assets/images/Whatsapp.png" class="social-icon" alt="Whatsapp"/></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="Civil-Projects.html">Civil Projects</a></li>
+        <li><a href="Interior-projects.html">Interior Projects</a></li>
+        <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
+        <li><a href="Certificates.html">Certificates</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Our Services</h3>
+      <ul>
+        <li>Civil Construction</li><li>Interior Design</li>
+        <li>Renovations</li><li>Architectural Planning</li><li>Project Management</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Contact Us</h3>
+      <ul class="contact-list">
+        <li><i class="fas fa-location-dot"></i><span>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus, Sangli – 416309</span></li>
+        <li><i class="fas fa-phone"></i><span>+91 86009 28493 / +91 86691 56263</span></li>
+        <li><i class="fas fa-envelope"></i><span>mbuiltsangli@gmail.com</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 All Rights Reserved by MBUILD DEVELOPERS.</div>
+</footer>
+
+<script>
+/* ═══════════════════════════════
+   ALL PROJECT DATA FROM PDF
+═══════════════════════════════ */
+const projects = {
+  'asha-school': {
+    title: 'Construction of Asha World School Building at Palus',
+    cat: 'Institutional · School',
+    badge: 'Institutional',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '15,000 Sq.Ft.',
+    cost: '₹3,30,00,000',
+    costShort: '₹3.30 Cr',
+    floors: 'G+2',
+    client: 'Aasha World School',
+    consultant: 'Vastu Architects, Ar. Ranjit A. Mulay, Pune',
+    type: 'School Building',
+    structure: 'RCC Frame Structure, G+2, Precast Wall Structure, Compound Wall, Trimix Flooring',
+    desc: 'Construction of the Asha World School building at Kundal is one of the flagship projects of Mbuild Developers. This prestigious educational institution spans a total construction area of 15,000 Sq.Ft. and was designed in collaboration with Vastu Architects from Pune.\n\nThe project features a robust RCC frame structure with G+2 floors, precast wall structure for faster construction, compound wall, and Trimix flooring across the entire premise with complete site development.',
+    features: ['RCC Frame Structure', 'G+2 Floors', 'Precast Wall Structure', 'Compound Wall', 'Trimix Flooring', 'Full Site Development', 'Total Area 15,000 Sq.Ft.', 'Project Cost ₹3.30 Cr'],
+    photos: [
+      '../assets/images/School_Projects/school_img1.jpeg',
+      '../assets/images/School_Projects/school_img2.jpeg',
+    ],
+    related: ['kiran-gavde','nagrale-gp','mahadev-mandir']
+  },
+  'kiran-gavde': {
+    title: 'Construction of Residential Building at Kundal',
+    cat: 'Residential',
+    badge: 'Residential',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '4,000 Sq.Ft.',
+    cost: '₹1,05,00,000',
+    costShort: '₹1.05 Cr',
+    floors: 'G+1',
+    client: 'Mr. Kiran Gavde, Kundal',
+    consultant: 'Ar. Vishwajeet Patil, Sangli',
+    type: 'Residential Building',
+    structure: 'RCC Frame Structure, G+1, Sloping Slab, Compound Wall, Brick Work and Plaster',
+    desc: 'This residential building project for Mr. Kiran Gavde at Kundal showcases Mbuild Developers\' expertise in modern residential construction. The project includes a G+1 RCC frame structure with a distinctive sloping slab design, compound wall, brick work, and plaster finishes.\n\nTotal construction area of 4,000 Sq.Ft. includes interior work and complete site development, delivered to the highest quality standards.',
+    features: ['RCC Frame Structure', 'G+1 Floors', 'Sloping Slab Design', 'Compound Wall', 'Interior Work Included', 'Site Development', '4,000 Sq.Ft. Area', '₹1.05 Cr Project'],
+    photos: [
+      '../assets/images/houses/project_19.jpg',
+      '../assets/images/houses/project_18.jpg',
+    ],
+    related: ['sampat-gavde','suhas-sankpal','rajendra-lad']
+  },
+  'green-building': {
+    title: 'Construction of Green Building at Kundal',
+    cat: 'Residential · Green',
+    badge: 'Eco Building',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '3,000 Sq.Ft.',
+    cost: '₹72,00,000',
+    costShort: '₹72 L',
+    floors: 'G+1',
+    client: 'Dr. Vaibhav Hendre, Kundal',
+    consultant: 'Anha Arch, Ar. Praveen Mali, Sangli',
+    type: 'Green / Eco Building',
+    structure: 'Conventional Load Bearing Building with Arches, Rohtak Dome, G+1, Sloping Slab, Compound Wall',
+    desc: 'This unique green building project for Dr. Vaibhav Hendre is one of the most distinctive projects in Mbuild Developers\' portfolio. The design incorporates conventional load bearing construction with beautiful arches, Rohtak dome elements, making it an Environment Friendly and Energy Efficient structure.\n\nThe 3,000 Sq.Ft. construction includes G+1 floors with sloping slab, compound wall, brick work, plaster, and complete interior work with site development.',
+    features: ['Eco-Friendly Design', 'Rohtak Dome Construction', 'Load Bearing Structure', 'Arches & Vaults', 'Energy Efficient', 'Sloping Slab', 'Interior Work Included', '₹72 L Investment'],
+    photos: [
+      '../assets/images/houses/project_3/img_2.jpg',
+      '../assets/images/houses/project_3/img_1.jpg',
+      '../assets/images/houses/project_6/img_1.jpg',
+    ],
+    related: ['kiran-gavde','sampat-gavde','rajendra-lad']
+  },
+  'sampat-gavde': {
+    title: 'Construction of Residential Bunglow at Palus',
+    cat: 'Residential · Bunglow',
+    badge: 'Residential',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '8,200 Sq.Ft.',
+    cost: '₹2,56,00,000',
+    costShort: '₹2.56 Cr',
+    floors: 'G+1',
+    client: 'Mr. Sampat Gavde, Kundal',
+    consultant: 'Architect Design Genesis, Ar. Abu Bakar, Vita',
+    type: 'Residential Bunglow',
+    structure: 'RCC Frame Structure, G+1, Sloping Slab, Compound Wall, Brick Work and Plaster',
+    desc: 'This premium residential bunglow for Mr. Sampat Gavde is among the largest residential projects executed by Mbuild Developers. Spanning 8,200 Sq.Ft. with a sophisticated design by Architect Design Genesis from Vita, this project exemplifies luxury residential construction.\n\nThe bunglow features G+1 RCC frame structure with beautiful sloping slab, compound wall, premium brick work and plaster finishes, with complete interior work and site development.',
+    features: ['RCC Frame Structure', 'G+1 Premium Bunglow', 'Sloping Slab', '8,200 Sq.Ft. Area', 'Compound Wall', 'Premium Interior Work', 'Site Development', '₹2.56 Cr Investment'],
+    photos: [
+      '../assets/images/houses/project_2/img_3.jpeg',
+      '../assets/images/houses/project_4/img_1.jpg',
+      '../assets/images/houses/project_2/img_7.jpeg',
+      '../assets/images/houses/project_2/img_1.jpeg',
+      '../assets/images/houses/project_2/img_2.jpeg'
+    ],
+    related: ['kiran-gavde','suhas-sankpal','rajendra-lad']
+  },
+  'suhas-sankpal': {
+    title: 'Construction of Residential Building at Palus',
+    cat: 'Residential',
+    badge: 'Residential',
+    location: 'Palus, Dis. Sangli',
+    area: '4,200 Sq.Ft.',
+    cost: '₹1,09,00,000',
+    costShort: '₹1.09 Cr',
+    floors: 'G+1',
+    client: 'Mr. Suhas Sankpal, Palus',
+    consultant: 'Ar. Praveen Patil, Sangli',
+    type: 'Residential Building',
+    structure: 'RCC Frame Structure, G+1, Compound Wall, Brick Work and Plaster',
+    desc: 'This modern residential building for Mr. Suhas Sankpal at Palus represents Mbuild Developers\' commitment to delivering quality residential construction within budget. Designed by Ar. Praveen Patil from Sangli, this project features contemporary architecture.\n\nThe 4,200 Sq.Ft. construction includes G+1 RCC frame structure, compound wall, brick work and plaster, with interior work and complete site development.',
+    features: ['RCC Frame Structure', 'G+1 Floors', 'Contemporary Design', 'Compound Wall', 'Brick Work & Plaster', 'Interior Work', 'Site Development', '4,200 Sq.Ft.'],
+    photos: [
+      '../assets/images/houses/project_12.jpg',
+      
+    ],
+    related: ['kiran-gavde','sampat-gavde','rajendra-lad']
+  },
+  'hotel-dhanashree': {
+    title: 'Construction of Hotel Building at Karad Tasgaon Road',
+    cat: 'Commercial · Hotel',
+    badge: 'Commercial',
+    location: 'Karad Tasgaon Road, Kundal, Dis. Sangli',
+    area: '4,400 Sq.Ft.',
+    cost: '₹88,00,000',
+    costShort: '₹88 L',
+    floors: 'G+1',
+    client: 'Mr. Dhanaji Jadhav',
+    consultant: 'Mbuild Developers, Kundal',
+    type: 'Commercial · Hotel Building',
+    structure: 'RCC Frame Structure, G+1, Compound Wall, Brick Work and Plaster',
+    desc: 'Hotel Dhanashree is a prestigious commercial hotel building constructed on the Karad Tasgaon Road at Kundal. This project was both designed and constructed by Mbuild Developers, showcasing the firm\'s end-to-end capabilities from architectural design to construction.\n\nThe 4,400 Sq.Ft. hotel features G+1 RCC frame structure with modern façade, compound wall, premium finishes, and complete interior work and site development.',
+    features: ['RCC Frame Structure', 'G+1 Hotel Building', 'Modern Hotel Design', 'Commercial Grade', 'Compound Wall', 'Premium Finishes', 'Interior Work', '4,400 Sq.Ft.'],
+    photos: [
+      '../assets/images/houses/project_8/img_1.jpg',
+      
+    ],
+    related: ['nagrale-gp','viraj-waterpark','asha-school']
+  },
+  'viraj-waterpark': {
+    title: 'Viraj Water Park, Kundal',
+    cat: 'Recreation · Water Park',
+    badge: 'Recreation',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '16,000 Sq.Ft.',
+    cost: '₹1,50,00,000',
+    costShort: '₹1.50 Cr',
+    floors: 'Ground',
+    client: 'Viraj Water Park',
+    consultant: 'Mbuild Developers, Kundal',
+    type: 'Recreation · Water Park',
+    structure: 'Structural MS Frame Structure, Swimming Pool, Slide Fitting, Landscaping, Precast Wall',
+    desc: 'Viraj Water Park is one of the most unique and large-scale projects in Mbuild Developers\' portfolio. This sprawling 16,000 Sq.Ft. water park at Kundal features a full structural MS frame structure, water slides, swimming pools, and extensive landscaping.\n\nThe project includes slide fitting, swimming pool work, landscaping, entry gate, lodging facilities, precast wall structure, and compound wall — a complete recreational facility built from the ground up.',
+    features: ['MS Frame Structure', 'Swimming Pool Construction', 'Water Slide Installation', 'Landscaping', 'Entry Gate & Lodging', 'Precast Wall', '16,000 Sq.Ft.', '₹1.50 Cr Investment'],
+    photos: [
+      '../assets/images/water_prk_project/water_par_img3.jpg',
+      '../assets/images/water_prk_project/water_par_img2.jpg',
+      '../assets/images/water_prk_project/water_par_img1.jpg',
+    ],
+    related: ['asha-school','hotel-dhanashree','nagrale-gp']
+  },
+  'nagrale-gp': {
+    title: 'Construction of Public Building at Nagrale',
+    cat: 'Institutional · Government',
+    badge: 'Government',
+    location: 'Nagrale, Tal. Palus, Dis. Sangli',
+    area: '6,000 Sq.Ft.',
+    cost: '₹1,20,00,000',
+    costShort: '₹1.20 Cr',
+    floors: 'G+1',
+    client: 'Grampanchayat Nagrale',
+    consultant: 'Executive Engineer, Z.P. Sangli',
+    type: 'Public / Government Building',
+    structure: 'RCC Frame Structure with Pile Foundation, G+1, Compound Wall, Brick Work and Plaster',
+    desc: 'This government public building for Grampanchayat Nagrale is a significant infrastructure project undertaken by Mbuild Developers under the supervision of the Executive Engineer of Zilla Parishad Sangli. The project required specialized pile foundation work.\n\nThe 6,000 Sq.Ft. building features RCC frame structure with deep pile foundations for soil stability, G+1 floors, compound wall, brick work, plaster, interior work, and complete site development.',
+    features: ['RCC Frame + Pile Foundation', 'G+1 Public Building', 'Government Standard', 'ZP Sangli Supervised', 'Compound Wall', 'Brick Work & Plaster', 'Interior Work', '6,000 Sq.Ft.'],
+    photos: [
+      '../assets/images/houses/project_7/img_1.jpg',
+    ],
+    related: ['asha-school','mahadev-mandir','viraj-waterpark']
+  },
+  'rajendra-lad': {
+    title: 'Construction of Residential Building at Kundal',
+    cat: 'Residential',
+    badge: 'Residential',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '4,600 Sq.Ft.',
+    cost: '₹1,12,00,000',
+    costShort: '₹1.12 Cr',
+    floors: 'G+2',
+    client: 'Mr. Rajendra Lad',
+    consultant: 'Mbuild Developers',
+    type: 'Residential Building',
+    structure: 'RCC Frame Structure, G+2, Compound Wall, Brick Work and Plaster',
+    desc: 'This three-storey residential building for Mr. Rajendra Lad (Mr. Raju Bhau Lad) at Kundal is a modern architectural design handled end-to-end by Mbuild Developers as both consultant and contractor. The G+2 structure provides spacious living across multiple floors.\n\nThe 4,600 Sq.Ft. project features RCC frame structure, compound wall, brick work, plaster finishes, interior work, and complete site development.',
+    features: ['RCC Frame Structure', 'G+2 Three Floors', 'Modern Architecture', 'Mbuild Design', 'Compound Wall', 'Interior Work', 'Site Development', '4,600 Sq.Ft.'],
+    photos: [
+      '../assets/images/houses/project_10.jpg',
+    ],
+    related: ['kiran-gavde','sampat-gavde','suhas-sankpal']
+  },
+  'mahadev-mandir': {
+    title: 'Construction of Kumbheshwar Mahadev Mandir',
+    cat: 'Institutional · Temple',
+    badge: 'Temple',
+    location: 'Kundal, Tal. Palus, Dis. Sangli',
+    area: '6,200 Sq.Ft.',
+    cost: '₹1,55,00,000',
+    costShort: '₹1.55 Cr',
+    floors: 'G+1',
+    client: 'Kumbheshwar Mahadev Mandir Trust &amp; Grampanchayat Kundal',
+    consultant: 'Executive Engineer, Z.P. Sangli',
+    type: 'Religious · Temple Construction',
+    structure: 'RCC Frame Structure, G+1, Compound Wall, Brick Work and Plaster',
+    desc: 'The Kumbheshwar Mahadev Mandir is a culturally and spiritually significant construction project at Kundal. This temple was built for the Kumbheshwar Mahadev Mandir Trust and Grampanchayat Kundal under the supervision of the Executive Engineer of Zilla Parishad Sangli.\n\nThe 6,200 Sq.Ft. temple complex features G+1 RCC frame structure, traditional temple architecture, compound wall, brick work, plaster, interior sanctum work, and complete site development.',
+    features: ['Temple Architecture', 'RCC Frame Structure', 'G+1 Complex', 'Traditional Design', 'ZP Sangli Supervised', 'Compound Wall', 'Interior Sanctum Work', '6,200 Sq.Ft.'],
+    photos: [
+      '../assets/images/Temple_Projects/temp_img1.jpeg',
+      '../assets/images/Temple_Projects/temp_img2.jpeg',
+    ],
+    related: ['asha-school','nagrale-gp','hotel-dhanashree']
+  }
+};
+
+/* ═══════════════════════════════
+   RELATED PROJECT QUICK DATA
+═══════════════════════════════ */
+const relatedMeta = {
+  'asha-school':       { title:'Asha World School',               cat:'Institutional', cost:'₹3.30 Cr', img:'../assets/images/School_Projects/school_img1.jpeg' },
+  'kiran-gavde':       { title:'Residential Building, Kundal',    cat:'Residential',   cost:'₹1.05 Cr', img:'../assets/images/houses/project_19.jpg' },
+  'green-building':    { title:'Green Building, Kundal',          cat:'Eco Building',  cost:'₹72 L',    img:'../assets/images/houses/project_3/img_2.jpg' },
+  'sampat-gavde':      { title:'Residential Bunglow, Palus',      cat:'Residential',   cost:'₹2.56 Cr', img:'../assets/images/houses/project_2/img_3.jpeg' },
+  'suhas-sankpal':     { title:'Residential Building, Palus',     cat:'Residential',   cost:'₹1.09 Cr', img:'../assets/images/houses/project_12.jpg' },
+  'hotel-dhanashree':  { title:'Hotel Dhanashree, Kundal',        cat:'Commercial',    cost:'₹88 L',    img:'../assets/images/houses/project_8/img_1.jpg' },
+  'viraj-waterpark':   { title:'Viraj Water Park, Kundal',        cat:'Recreation',    cost:'₹1.50 Cr', img:'../assets/images/water_prk_project/water_par_img1.jpg' },
+  'nagrale-gp':        { title:'Public Building, Nagrale',        cat:'Government',    cost:'₹1.20 Cr', img:'../assets/images/houses/project_7/img_1.jpg'},
+  'rajendra-lad':      { title:'Residential Building, Kundal',    cat:'Residential',   cost:'₹1.12 Cr', img:'../assets/images/houses/project_10.jpg'},
+  'mahadev-mandir':    { title:'Mahadev Mandir, Kundal',          cat:'Temple',        cost:'₹1.55 Cr', img:'../assets/images/Temple_Projects/temp_img1.jpeg'},
+};
+
+/* ═══════════════════════════════
+   LOAD PROJECT FROM URL PARAM
+═══════════════════════════════ */
+const id = new URLSearchParams(window.location.search).get('id') || 'asha-school';
+const p = projects[id] || projects['asha-school'];
+
+// Update page title
+document.title = p.title + ' – MBUILD DEVELOPERS';
+
+// Hero
+document.getElementById('heroImg').src = p.photos[0];
+document.getElementById('heroImg').alt = p.title;
+document.getElementById('breadTitle').textContent = p.title.split(' ').slice(0,4).join(' ') + '...';
+document.getElementById('heroCat').textContent = p.badge;
+document.getElementById('heroTitle').textContent = p.title;
+document.getElementById('heroLoc').textContent = p.location;
+document.getElementById('heroArea').textContent = p.area;
+document.getElementById('heroCost').textContent = p.cost;
+
+// Info rows
+document.getElementById('infoClient').textContent = p.client;
+document.getElementById('infoConsultant').textContent = p.consultant;
+document.getElementById('infoLocation').textContent = p.location;
+document.getElementById('infoType').textContent = p.type;
+document.getElementById('infoStructure').textContent = p.structure;
+document.getElementById('infoArea').textContent = p.area;
+document.getElementById('infoCost').textContent = p.cost;
+
+// Description
+document.getElementById('descText').innerHTML = p.desc.replace(/\n\n/g,'</p><p>');
+
+// Features
+const fl = document.getElementById('featureList');
+p.features.forEach(f=>{
+  fl.innerHTML += `<div class="feature-item"><i class="fas fa-check-circle"></i>${f}</div>`;
+});
+
+// Sidebar
+document.getElementById('sidebarCost').textContent = p.costShort;
+document.getElementById('sidebarArea').textContent = p.area;
+document.getElementById('sidebarFloors').textContent = p.floors;
+
+// Photos grid
+const pg = document.getElementById('photosGrid');
+p.photos.forEach((src,i)=>{
+  pg.innerHTML += `<div class="photo-item" onclick="openLightbox(${i})">
+    <img src="${src}" alt="${p.title} - Photo ${i+1}" loading="lazy"/>
+    <div class="photo-overlay"><div class="photo-zoom"><i class="fas fa-expand"></i></div></div>
+  </div>`;
+});
+
+// Related projects
+const rg = document.getElementById('relatedGrid');
+p.related.forEach(rid=>{
+  const rm = relatedMeta[rid];
+  if(!rm) return;
+  rg.innerHTML += `<a class="related-card" href="Civil-Project-Detail.html?id=${rid}">
+    <img src="${rm.img}" alt="${rm.title}" loading="lazy"/>
+    <div class="related-info">
+      <div class="related-cat">${rm.cat}</div>
+      <div class="related-title">${rm.title}</div>
+      <div class="related-cost">${rm.cost}</div>
+    </div>
+  </a>`;
+});
+
+/* ═══════════════════════════════
+   LIGHTBOX
+═══════════════════════════════ */
+let currentLb = 0;
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+lbImg.style.transition = 'opacity .2s';
+
+function openLightbox(i) {
+  currentLb = i;
+  lbImg.src = p.photos[i];
+  document.getElementById('lbCounter').textContent = (i+1)+'/'+p.photos.length;
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+function navLb(d){
+  currentLb=(currentLb+d+p.photos.length)%p.photos.length;
+  lbImg.style.opacity='0';
+  setTimeout(()=>{ lbImg.src=p.photos[currentLb]; document.getElementById('lbCounter').textContent=(currentLb+1)+'/'+p.photos.length; lbImg.style.opacity='1'; },180);
+}
+document.getElementById('lbClose').addEventListener('click',closeLb);
+document.getElementById('lbPrev').addEventListener('click',()=>navLb(-1));
+document.getElementById('lbNext').addEventListener('click',()=>navLb(1));
+lb.addEventListener('click',e=>{ if(e.target===lb)closeLb(); });
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLb();
+  if(e.key==='ArrowRight')navLb(1);
+  if(e.key==='ArrowLeft')navLb(-1);
+});
+</script>
+</body>
+</html>

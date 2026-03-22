@@ -1,491 +1,694 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Photo Gallery – MBUILD DEVELOPERS</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:#c9a84c; --gold-light:#e2c97e; --blue:#1a3558; --blue2:#254a78;
+  --navy:#0d1f35; --text-muted:#7a7060; --bg:#d8eaf0;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-in-out:cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);overflow-x:hidden;font-family:'DM Sans',sans-serif;}
+img{display:block;}
+a{text-decoration:none;}
+button{cursor:pointer;}
 
-    <title>Mbuild Developers | Architecture, Engineer & Contractors</title>
+/* ── HERO ── */
+.int-hero{position:relative;width:100%;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;}
+.hero-video-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.hero-img-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.int-hero-overlay{position:absolute;inset:0;background:rgba(15,25,45,.65);}
+.int-hero-bread{position:absolute;top:16px;left:40px;display:flex;align-items:center;gap:8px;font-size:.75rem;color:rgba(255,255,255,.45);z-index:1;}
+.int-hero-bread a{color:#e2c97e;transition:.2s;}
+.int-hero-bread a:hover{color:#fff;}
+.int-hero-content{position:relative;z-index:1;padding:0 24px;}
+.int-hero-eye{color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;font-family:'DM Sans',sans-serif;}
+.int-hero-content h2{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:800;color:#fff;margin-bottom:16px;line-height:1.15;text-shadow:0 2px 20px rgba(0,0,0,.4);}
+.int-hero-content p{color:rgba(255,255,255,.75);font-size:1rem;max-width:520px;margin:0 auto 28px;line-height:1.7;font-family:'DM Sans',sans-serif;}
+.int-hero-btn{background:linear-gradient(135deg,#c9a84c,#e2a832);color:#1a3558;border:none;padding:13px 36px;border-radius:30px;font-size:.95rem;font-weight:800;font-family:'DM Sans',sans-serif;letter-spacing:.5px;box-shadow:0 6px 20px rgba(201,168,76,.45);transition:.2s;}
+.int-hero-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(201,168,76,.55);}
+.int-hero-stats{display:flex;gap:40px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.int-hero-stat .sn{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:var(--gold);line-height:1;}
+.int-hero-stat .sl{font-size:.65rem;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+/* ── FILTER BAR ── */
+.filter-section{background:rgba(216,234,240,.95);padding:28px 60px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(26,53,88,.08);backdrop-filter:blur(10px);}
+.filter-pills{display:flex;gap:10px;flex-wrap:wrap;}
+.pill{padding:9px 22px;border-radius:30px;background:var(--gold);color:var(--blue);border:none;font-size:.78rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;transition:all .3s var(--ease-out);font-family:'DM Sans',sans-serif;box-shadow:0 3px 12px rgba(201,168,76,.28);position:relative;overflow:hidden;}
+.pill::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.2);transform:translateX(-100%);transition:.3s;}
+.pill:hover::after{transform:translateX(0);}
+.pill:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,168,76,.4);}
+.pill.active{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(26,53,88,.35);transform:translateY(-1px);}
+.filter-right{font-size:.82rem;color:var(--text-muted);font-weight:500;}
+.filter-right strong{color:var(--blue);}
 
-    <!-- Basic SEO -->
-    <meta name="description" content="MBUILD Developers – Dream Big, Build Right.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* ── MASONRY GALLERY ── */
+.gallery-section{padding:40px 60px 72px;background:var(--bg);}
+.masonry-grid{
+  columns:4;
+  column-gap:14px;
+}
+.gallery-item{
+  break-inside:avoid;
+  margin-bottom:14px;
+  border-radius:14px;
+  overflow:hidden;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.1);
+  transition:transform .35s var(--ease-out), box-shadow .35s;
+  opacity:0;
+  transform:translateY(24px);
+  display:block;
+}
+.gallery-item.revealed{opacity:1;transform:translateY(0);}
+.gallery-item:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(26,53,88,.22);}
+.gallery-item img{width:100%;display:block;transition:transform .6s var(--ease-out);}
+.gallery-item:hover img{transform:scale(1.06);}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/images/logo_new.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+/* Overlay */
+.g-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(13,31,53,.85) 0%,rgba(13,31,53,.2) 60%,transparent 100%);
+  opacity:0;transition:opacity .35s;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:18px;
+}
+.gallery-item:hover .g-overlay{opacity:1;}
+.g-cat{font-size:.65rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-family:'DM Sans',sans-serif;}
+.g-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:#fff;line-height:1.25;}
+.g-loc{font-size:.72rem;color:rgba(255,255,255,.6);margin-top:3px;font-family:'DM Sans',sans-serif;}
+.g-zoom{
+  position:absolute;top:12px;right:12px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.85rem;
+  opacity:0;transition:opacity .3s .05s;backdrop-filter:blur(4px);
+}
+.gallery-item:hover .g-zoom{opacity:1;}
 
+/* Cat badge */
+.g-badge{
+  position:absolute;top:12px;left:12px;z-index:2;
+  background:var(--gold);color:var(--blue);
+  font-size:.62rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;
+  box-shadow:0 2px 10px rgba(201,168,76,.4);font-family:'DM Sans',sans-serif;
+}
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:9000;background:rgba(8,16,28,.96);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease-in-out);}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lb-wrap{position:relative;max-width:92vw;max-height:90vh;display:flex;align-items:center;justify-content:center;}
+.lb-img-container{border-radius:14px;overflow:hidden;transform:scale(.94);transition:transform .4s var(--ease-out);box-shadow:0 40px 100px rgba(0,0,0,.6);max-width:88vw;max-height:85vh;}
+.lightbox.open .lb-img-container{transform:scale(1);}
+.lb-img-container img{max-width:88vw;max-height:82vh;object-fit:contain;display:block;}
+.lb-info-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(13,31,53,.95),transparent);padding:40px 24px 20px;border-radius:0 0 14px 14px;}
+.lb-info-cat{font-size:.66rem;color:var(--gold);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.lb-info-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;font-weight:700;}
+.lb-info-loc{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:3px;}
+.lb-close{position:absolute;top:-50px;right:0;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.lb-close:hover{background:rgba(255,255,255,.22);}
+.lb-nav{position:fixed;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:.25s;backdrop-filter:blur(4px);}
+.lb-nav:hover{background:rgba(255,255,255,.22);}
+.lb-prev{left:20px;}.lb-next{right:20px;}
+.lb-counter{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:#fff;font-size:.78rem;font-weight:600;padding:6px 18px;border-radius:20px;backdrop-filter:blur(4px);}
 
+/* ── CTA ── */
+.cta-section{background:var(--blue);padding:72px 60px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+.cta-section::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 60px,rgba(201,168,76,.03) 60px,rgba(201,168,76,.03) 61px);}
+.cta-section::after{content:'';position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.1) 0%,transparent 70%);pointer-events:none;}
+.cta-left{position:relative;z-index:1;max-width:560px;}
+.cta-eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;}
+.cta-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+.cta-left h2{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:16px;}
+.cta-left h2 em{font-style:italic;color:var(--gold);}
+.cta-left p{color:rgba(255,255,255,.6);font-size:.97rem;line-height:1.75;}
+.cta-right{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;min-width:260px;}
+.btn-gold{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--gold);color:var(--blue);border:none;padding:16px 32px;border-radius:10px;font-size:.9rem;font-weight:800;font-family:'DM Sans',sans-serif;letter-spacing:.5px;transition:.3s;box-shadow:0 6px 24px rgba(201,168,76,.35);}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(201,168,76,.5);}
+.btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.2);padding:15px 32px;border-radius:10px;font-size:.9rem;font-weight:700;font-family:'DM Sans',sans-serif;transition:.3s;}
+.btn-wa:hover{background:rgba(37,211,102,.2);border-color:rgba(37,211,102,.5);transform:translateY(-2px);}
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:8000;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.5);animation:waPulse 2.5s infinite;transition:transform .2s;}
+.wa-float:hover{transform:scale(1.1);animation:none;}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.5);}50%{box-shadow:0 6px 40px rgba(37,211,102,.75),0 0 0 10px rgba(37,211,102,.08);}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.masonry-grid{columns:3;}.gallery-section{padding:36px 40px 60px;}.filter-section{padding:28px 40px 22px;}}
+@media(max-width:900px){.masonry-grid{columns:2;}.gallery-section{padding:28px 20px 50px;}.filter-section{padding:20px 16px;top:0;position:relative;}.int-hero{height:320px;}.int-hero-content h2{font-size:2rem;}.int-hero-bread{left:16px;}.cta-section{padding:52px 30px;flex-direction:column;}}
+@media(max-width:560px){.masonry-grid{columns:1;}.int-hero-content h2{font-size:1.75rem;}.filter-pills{gap:8px;}.pill{padding:7px 14px;font-size:.72rem;}.lb-nav{width:40px;height:40px;font-size:1.1rem;}.lb-prev{left:6px;}.lb-next{right:6px;}}
+</style>
 </head>
-
 <body>
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="logo">
-            <h1 class="outline-text">MBUILD DEVELOPERS</h1>
-            <div class="subtitle-badge">
-                <p class="tagline">Architecture, Engineer & Contractors</p>
-            </div>
-        </div>
+<!-- WA FLOAT -->
+<a class="wa-float" href="https://wa.me/918600928493" target="_blank">💬</a>
 
-        <nav class="navbar">
-            <a href="../index.html">Home</a>
-            <a href="Our-product-Services.html">Our Products & Services</a>
-            <a href="Civil-Projects.html">Civil Projects</a>
-            <a href="Interior-projects.html">Interior Projects</a>
-            <a href="Photo-Gallary.html">Photo Gallery</a>
-            <a href="Contact-Us.html">Contact Us</a>
-            <a href="Certificates.html">Certificates</a>
-        </nav>
-    </header>
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-        <video autoplay muted loop playsinline class="hero-video">
-            <source src="../assets/videos/hero-video.mp4" type="video/mp4">
+<!-- EXISTING HEADER -->
+<header class="main-header">
+  <div class="logo">
+    <h1 class="outline-text">MBUILD DEVELOPERS</h1>
+    <div class="subtitle-badge"><p class="tagline">Architecture, Engineer &amp; Contractors</p></div>
+  </div>
+  <nav class="navbar">
+    <a href="../index.html">Home</a>
+    <a href="Our-product-Services.html">Our Products &amp; Services</a>
+    <a href="Civil-Projects.html">Civil Projects</a>
+    <a href="Interior-projects.html">Interior Projects</a>
+    <a href="Photo-Gallary.html" class="active">Photo Gallery</a>
+    <a href="Contact-Us.html">Contact Us</a>
+    <a href="Certificates.html">Certificates</a>
+  </nav>
+</header>
 
-            Your browser does not support the video tag.
-        </video>
+<!-- HERO -->
+<div class="int-hero">
+  <video class="hero-video-bg" autoplay muted loop playsinline>
+    <source src="../assets/videos/hero-video.mp4" type="video/mp4"/>
+  </video>
+  <img class="hero-img-bg" src="../assets/images/houses/project_14.jpeg" alt="Gallery Hero" style="display:none;" id="heroFallback"/>
+  <div class="int-hero-overlay"></div>
+  <div class="int-hero-bread">
+    <a href="../index.html">Home</a><span>›</span>
+    <span style="color:rgba(255,255,255,.7)">Photo Gallery</span>
+  </div>
+  <div class="int-hero-content">
+    <div class="int-hero-eye">OUR PORTFOLIO</div>
+    <h2>Our Photo Gallery</h2>
+    <p>Showcasing excellence in construction, architecture &amp; engineering projects across Maharashtra.</p>
+    <button class="int-hero-btn" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">
+      Explore Projects ↓
+    </button>
+    <div class="int-hero-stats">
+      <div class="int-hero-stat"><span class="sn">40+</span><span class="sl">Photos</span></div>
+      <div class="int-hero-stat"><span class="sn">200+</span><span class="sl">Projects Done</span></div>
+      <div class="int-hero-stat"><span class="sn">5</span><span class="sl">Categories</span></div>
+    </div>
+  </div>
+</div>
 
-        <div class="hero-content">
-            <h1>Our Photo Gallery</h1>
-            <p>Showcasing excellence in construction, architecture<br> & <br>engineering projects.</p>
-            <a href="#gallery" class="btn button-15">Explore Projects</a>
-        </div>
-    </section>
+<!-- FILTER BAR -->
+<div class="filter-section" id="gallery">
+  <div class="filter-pills">
+    <button class="pill active" data-filter="all">All Work</button>
+    <button class="pill" data-filter="residential">Residential</button>
+    <button class="pill" data-filter="interior">Interior</button>
+    <button class="pill" data-filter="industrial">Industrial</button>
+    <button class="pill" data-filter="other">Other</button>
+  </div>
+  <div class="filter-right">Showing <strong id="cnt">40</strong> photos</div>
+</div>
 
+<!-- MASONRY GALLERY -->
+<section class="gallery-section">
+  <div class="masonry-grid" id="masonryGrid">
 
-
-    <!-- GALLERY SECTION -->
-    <section id="gallery" class="gallery-section">
-        <!-- FILTER BUTTONS (ADD HERE) -->
-        <div class="filter-buttons">
-            <button class="filter-btn active" onclick="filterSelection('all')">ALL WORK</button>
-            <button class="filter-btn" onclick="filterSelection('residential')">RESIDENTIAL</button>
-            <button class="filter-btn" onclick="filterSelection('interior')">INTERIOR</button>
-            <button class="filter-btn" onclick="filterSelection('industrial')">INDUSTRIAL</button>
-            <button class="filter-btn" onclick="filterSelection('other')">OTHER</button>
-        </div>
-
-        <div class="gallery-card other">
-            <img src="../assets/images/School_Projects/school_img1.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card other">
-            <img src="../assets/images/Temple_Projects/temp_img1.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-
-
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project5.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Modern Residential Villa</h3>
-                <p>Pune, Maharashtra</p>
-            </div>
-        </div>
-
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project3.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Luxury Bungalow Project</h3>
-                <p>Kolhapur</p>
-            </div>
-        </div>
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project2.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Luxury Bungalow Project</h3>
-                <p>Kolhapur</p>
-            </div>
-        </div>
-
-
-
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project1.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Commercial Building</h3>
-                <p>Sangli</p>
-            </div>
-        </div>
-
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project6.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card interior">
-            <img src="../assets/images/Interior_Projects/inte_project7.jpeg" alt="Project 3">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_2/img_1.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_2/img_3.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_3/img_2.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_4/img_1.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_5/img_2.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_1/img5.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_6/img_1.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_7/img_1.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_8/img_1.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_9.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_10.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_11.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_12.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_13.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_14.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_15.jpeg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_16.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_17.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_18.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_19.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_20.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_21.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_22.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_23.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_24.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-        <div class="gallery-card residential">
-            <img src="../assets/images/houses/project_25.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-
-        <div class="gallery-card industrial">
-            <img src="../assets/images/mill_Project/mill_img.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-
-        
-        <div class="gallery-card other">
-            <img src="../assets/images/water_prk_project/water_par_img1.jpg" alt="Project 4">
-            <div class="overlay">
-                <h3>Interior Project</h3>
-                <p>Satara</p>
-            </div>
-        </div>
-
-    </section>
-
-    <!--footer-->
-    <footer class="footer">
-        <div class="footer-container">
-
-            <!-- Brand -->
-            <div class="footer-col">
-                <div class="brand">
-                    <img src="../assets/images/logo_new.png" alt="MBUILD Developers">
-                    <div>
-                        <h2>MBUILD</h2>
-                        <span>DEVELOPERS</span>
-                    </div>
-                </div>
-                <h4><strong>(Dream Big Build Right)</strong></h4>
-                <p>
-                    Leading the way in construction excellence. We build residential
-                    and commercial spaces that stand the test of time, combining
-                    modern design with solid engineering.
-                </p>
-
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/your_facebook" target="_blank" aria-label="Facebook"><img
-                            src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"></a>
-                    <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank" aria-label="Instagram"><img
-                            src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"></a>
-                    <a href="https://wa.me/918600928493" target="_blank" aria-label="WhatsApp"><img
-                            src="../assets/images/Whatsapp.png" class="social-icon" alt="Whatsapp"></a>
-                </div>
-
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="Our-product-Services.html">Our Products & Services</a></li>
-                    <li><a href="Civil-Projects.html">Civil Projects</a></li>
-                    <li><a href="Interior-projects.html">Interior projects</a></li>
-                    <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
-                    <li><a href="Certificates.html">Certificates</a></li>
-                </ul>
-            </div>
-
-            <!-- Services -->
-            <div class="footer-col">
-                <h3>Our Services</h3>
-                <ul>
-                    <li>Civil Construction</li>
-                    <li>Interior Design</li>
-                    <li>Renovations</li>
-                    <li>Architectural Planning</li>
-                    <li>Project Management</li>
-                </ul>
-            </div>
-
-            <!-- Contact -->
-            <div class="footer-col">
-                <h3>Contact Us</h3>
-                <ul class="contact-list">
-                    <li>
-                        <i class="fas fa-location-dot"></i>
-                        <span>
-                            Main Road, Behind AK Mobiles,<br>
-                            Kundal, Tal. Palus,<br>
-                            Sangli – 416309,<br>
-                            Maharashtra, India
-                        </span>
-                    </li>
-
-                    <li>
-                        <i class="fas fa-phone"></i>
-                        <span>
-                            +91 86009 28493
-                            <br>
-                            +91 86691 56263
-                        </span>
-                    </li>
-
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span>
-                            mbuiltsangli@gmail.com
-                            <br>
-                            mbuilddevelopers@gmail.com
-                        </span>
-                    </li>
-                </ul>
-
-            </div>
-
-        </div>
-
-        <div class="footer-bottom">
-            © 2026 All Rights Reserved by MBUILD DEVELOPERS.
-        </div>
-    </footer>
-
-    <!-- IMAGE POPUP MODAL -->
-    <div class="image-modal" id="imageModal">
-        <span class="close-btn" id="closeModal">&times;</span>
-
-        <img id="modalImage">
-
-        <div class="modal-content-text">
-            <h2 id="modalTitle"></h2>
-            <p id="modalSize"></p>
-            <p id="modalCost"></p>
-            <p id="modalLocation"></p>
-        </div>
+    <!-- ── SCHOOL ── -->
+    <div class="gallery-item" data-cat="other" data-title="Asha World School" data-loc="Kundal, Sangli" data-cat-label="School">
+      <img src="../assets/images/School_Projects/school_img1.jpeg" alt="Asha World School" loading="lazy"/>
+      <span class="g-badge">School</span>
+      <div class="g-overlay">
+        <div class="g-cat">Institutional</div>
+        <div class="g-title">Asha World School</div>
+        <div class="g-loc">📍 Kundal, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
     </div>
 
-    <script src="../assets/js/script.js"></script>
-    <script>
-        function filterSelection(category) {
+    <!-- ── TEMPLE ── -->
+    <div class="gallery-item" data-cat="other" data-title="Kumbheshwar Mahadev Mandir" data-loc="Kundal, Sangli" data-cat-label="Temple">
+      <img src="../assets/images/Temple_Projects/temp_img1.jpeg" alt="Mahadev Mandir" loading="lazy"/>
+      <span class="g-badge">Temple</span>
+      <div class="g-overlay">
+        <div class="g-cat">Institutional</div>
+        <div class="g-title">Kumbheshwar Mahadev Mandir</div>
+        <div class="g-loc">📍 Kundal, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-            let cards = document.getElementsByClassName("gallery-card");
-            let buttons = document.getElementsByClassName("filter-btn");
+    <!-- ── INTERIOR ── -->
+    <div class="gallery-item" data-cat="interior" data-title="Master Bedroom Interior" data-loc="Kundal, Sangli" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project5.jpeg" alt="Master Bedroom" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Master Bedroom Interior</div>
+        <div class="g-loc">📍 Kundal, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-            // Remove active class from all buttons
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove("active");
-            }
+    <div class="gallery-item" data-cat="interior" data-title="Dental Clinic Reception" data-loc="Sangli City" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project3.jpeg" alt="Dental Clinic" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Dental Clinic Reception</div>
+        <div class="g-loc">📍 Sangli City</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-            // Add active class to clicked button
-            event.target.classList.add("active");
+    <div class="gallery-item" data-cat="interior" data-title="Clinic Corridor & Waiting Area" data-loc="Karad, Satara" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project2.jpeg" alt="Clinic Corridor" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Clinic Corridor & Waiting Area</div>
+        <div class="g-loc">📍 Karad, Satara</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-            // Show all if category is "all"
-            if (category === "all") {
-                for (let i = 0; i < cards.length; i++) {
-                    cards[i].style.display = "block";
-                }
-                return;
-            }
+    <div class="gallery-item" data-cat="interior" data-title="Modern Living Room" data-loc="Miraj, Sangli" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project1.jpeg" alt="Living Room" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Modern Living Room</div>
+        <div class="g-loc">📍 Miraj, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-            // Hide all first
-            for (let i = 0; i < cards.length; i++) {
-                cards[i].style.display = "none";
+    <div class="gallery-item" data-cat="interior" data-title="Dining Room — Wooden Ceiling" data-loc="Palus, Sangli" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project6.jpeg" alt="Dining Room" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Dining Room — Wooden Ceiling</div>
+        <div class="g-loc">📍 Palus, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
 
-                if (cards[i].classList.contains(category)) {
-                    cards[i].style.display = "block";
-                }
-            }
-        }
-    </script>
+    <div class="gallery-item" data-cat="interior" data-title="Luxury Living Room" data-loc="Vita, Sangli" data-cat-label="Interior">
+      <img src="../assets/images/Interior_Projects/inte_project7.jpeg" alt="Luxury Living Room" loading="lazy"/>
+      <span class="g-badge">Interior</span>
+      <div class="g-overlay">
+        <div class="g-cat">Interior Design</div>
+        <div class="g-title">Luxury Living Room</div>
+        <div class="g-loc">📍 Vita, Sangli</div>
+      </div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <!-- ── RESIDENTIAL ── -->
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Kundal, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_2/img_1.jpeg" alt="Residential Project" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Kundal, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Kundal, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_2/img_3.jpeg" alt="Residential Project" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Kundal, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Green Building" data-loc="Kundal, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_3/img_2.jpg" alt="Green Building" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Green Building, Kundal</div><div class="g-loc">📍 Kundal, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Bunglow" data-loc="Palus, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_4/img_1.jpg" alt="Residential Bunglow" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Bunglow, Palus</div><div class="g-loc">📍 Palus, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Building" data-loc="Palus, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_5/img_2.jpeg" alt="Residential Building" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building, Palus</div><div class="g-loc">📍 Palus, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Kundal, Sangli" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_1/img5.jpeg" alt="Residential Project" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Kundal, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Sangli District" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_6/img_1.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Sangli District</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Sangli District" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_7/img_1.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Sangli District</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Sangli District" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_8/img_1.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Sangli District</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_9.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_10.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_11.jpeg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_12.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_13.jpeg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_14.jpeg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_15.jpeg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_16.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_17.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_18.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_19.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_20.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_21.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_22.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_23.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_24.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <div class="gallery-item" data-cat="residential" data-title="Residential Project" data-loc="Maharashtra" data-cat-label="Residential">
+      <img src="../assets/images/houses/project_25.jpg" alt="Residential" loading="lazy"/>
+      <span class="g-badge">Residential</span>
+      <div class="g-overlay"><div class="g-cat">Residential</div><div class="g-title">Residential Building</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <!-- ── INDUSTRIAL ── -->
+    <div class="gallery-item" data-cat="industrial" data-title="Industrial Mill Project" data-loc="Maharashtra" data-cat-label="Industrial">
+      <img src="../assets/images/mill_Project/mill_img.jpg" alt="Mill Project" loading="lazy"/>
+      <span class="g-badge">Industrial</span>
+      <div class="g-overlay"><div class="g-cat">Industrial</div><div class="g-title">Industrial Mill Project</div><div class="g-loc">📍 Maharashtra</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+    <!-- ── WATER PARK ── -->
+    <div class="gallery-item" data-cat="other" data-title="Viraj Water Park" data-loc="Kundal, Sangli" data-cat-label="Recreation">
+      <img src="../assets/images/water_prk_project/water_par_img1.jpg" alt="Viraj Water Park" loading="lazy"/>
+      <span class="g-badge">Recreation</span>
+      <div class="g-overlay"><div class="g-cat">Recreation</div><div class="g-title">Viraj Water Park</div><div class="g-loc">📍 Kundal, Sangli</div></div>
+      <div class="g-zoom"><i class="fas fa-expand-alt"></i></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-counter" id="lbCounter">1 / 40</div>
+  <div class="lb-wrap">
+    <div class="lb-img-container">
+      <img id="lbImg" src="" alt=""/>
+      <div class="lb-info-bar">
+        <div class="lb-info-cat" id="lbCat"></div>
+        <div class="lb-info-title" id="lbTitle"></div>
+        <div class="lb-info-loc" id="lbLoc"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-left">
+    <div class="cta-eyebrow">Start Your Project</div>
+    <h2>Want a Project Like <em>This?</em></h2>
+    <p>Get a free consultation from our expert team. We serve Sangli, Satara, Kolhapur, Miraj, Karad and all surrounding areas in Maharashtra.</p>
+  </div>
+  <div class="cta-right">
+    <a href="Contact-Us.html"><button class="btn-gold">📋 Get Free Consultation →</button></a>
+    <a class="btn-wa" href="https://wa.me/918600928493" target="_blank">💬 &nbsp;WhatsApp Us Now</a>
+  </div>
+</section>
+
+<!-- EXISTING FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <div class="brand">
+        <img src="../assets/images/logo_new.png" alt="MBUILD Developers"/>
+        <div><h2>MBUILD</h2><span>DEVELOPERS</span></div>
+      </div>
+      <h4><strong>(Dream Big Build Right)</strong></h4>
+      <p>Leading the way in construction excellence. We build residential and commercial spaces that stand the test of time.</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/your_facebook" target="_blank"><img src="../assets/images/Facebook.png" class="social-icon" alt="Facebook"/></a>
+        <a href="https://www.instagram.com/mbuilddevelopers2024" target="_blank"><img src="../assets/images/Instagram.png" class="social-icon" alt="Instagram"/></a>
+        <a href="https://wa.me/918600928493" target="_blank"><img src="../assets/images/Whatsapp.png" class="social-icon" alt="Whatsapp"/></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="Our-product-Services.html">Our Products &amp; Services</a></li>
+        <li><a href="Civil-Projects.html">Civil Projects</a></li>
+        <li><a href="Interior-projects.html">Interior Projects</a></li>
+        <li><a href="Photo-Gallary.html">Photo Gallery</a></li>
+        <li><a href="Certificates.html">Certificates</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Our Services</h3>
+      <ul>
+        <li>Civil Construction</li><li>Interior Design</li>
+        <li>Renovations</li><li>Architectural Planning</li><li>Project Management</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Contact Us</h3>
+      <ul class="contact-list">
+        <li><i class="fas fa-location-dot"></i><span>Main Road, Behind AK Mobiles,<br/>Kundal, Tal. Palus,<br/>Sangli – 416309, Maharashtra, India</span></li>
+        <li><i class="fas fa-phone"></i><span>+91 86009 28493<br/>+91 86691 56263</span></li>
+        <li><i class="fas fa-envelope"></i><span>mbuiltsangli@gmail.com<br/>mbuilddevelopers@gmail.com</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 All Rights Reserved by MBUILD DEVELOPERS.</div>
+</footer>
+
+<script>
+/* ── VIDEO FALLBACK: if video fails, show image ── */
+const vid = document.querySelector('.hero-video-bg');
+const fallback = document.getElementById('heroFallback');
+if(vid){
+  vid.addEventListener('error', () => { vid.style.display='none'; fallback.style.display='block'; });
+  vid.addEventListener('loadeddata', () => { fallback.style.display='none'; });
+}
+
+/* ── COLLECT ALL VISIBLE ITEMS ── */
+let allItems = [];
+let visibleItems = [];
+
+function buildIndex(){
+  allItems = Array.from(document.querySelectorAll('.gallery-item'));
+  visibleItems = allItems.filter(el => el.style.display !== 'none');
+}
+
+/* ── SCROLL REVEAL ── */
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(() => e.target.classList.add('revealed'), i * 40);
+      revObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.gallery-item').forEach(el => revObs.observe(el));
+
+/* ── FILTER ── */
+document.querySelectorAll('.pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    let n = 0;
+    document.querySelectorAll('.gallery-item').forEach(el => {
+      const show = f === 'all' || el.dataset.cat === f;
+      el.style.display = show ? '' : 'none';
+      if(show){ n++; if(!el.classList.contains('revealed')) el.classList.add('revealed'); }
+    });
+    document.getElementById('cnt').textContent = n;
+    buildIndex();
+  });
+});
+
+/* ── LIGHTBOX ── */
+buildIndex();
+let currentIdx = 0;
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+lbImg.style.transition = 'opacity .18s';
+
+function openLb(idx){
+  buildIndex();
+  currentIdx = idx;
+  const el = visibleItems[idx];
+  if(!el) return;
+  lbImg.src = el.querySelector('img').src;
+  document.getElementById('lbCat').textContent = el.dataset.catLabel || '';
+  document.getElementById('lbTitle').textContent = el.dataset.title || '';
+  document.getElementById('lbLoc').textContent = el.dataset.loc || '';
+  document.getElementById('lbCounter').textContent = (idx+1) + ' / ' + visibleItems.length;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb(){ lb.classList.remove('open'); document.body.style.overflow = ''; }
+function navLb(d){
+  currentIdx = (currentIdx + d + visibleItems.length) % visibleItems.length;
+  lbImg.style.opacity = '0';
+  setTimeout(() => {
+    const el = visibleItems[currentIdx];
+    lbImg.src = el.querySelector('img').src;
+    document.getElementById('lbCat').textContent = el.dataset.catLabel || '';
+    document.getElementById('lbTitle').textContent = el.dataset.title || '';
+    document.getElementById('lbLoc').textContent = el.dataset.loc || '';
+    document.getElementById('lbCounter').textContent = (currentIdx+1) + ' / ' + visibleItems.length;
+    lbImg.style.opacity = '1';
+  }, 180);
+}
+
+/* Attach click to each gallery item */
+document.querySelectorAll('.gallery-item').forEach((el, i) => {
+  el.addEventListener('click', () => {
+    buildIndex();
+    const vIdx = visibleItems.indexOf(el);
+    if(vIdx !== -1) openLb(vIdx);
+  });
+});
+
+document.getElementById('lbClose').addEventListener('click', closeLb);
+document.getElementById('lbPrev').addEventListener('click', () => navLb(-1));
+document.getElementById('lbNext').addEventListener('click', () => navLb(1));
+lb.addEventListener('click', e => { if(e.target === lb) closeLb(); });
+document.addEventListener('keydown', e => {
+  if(!lb.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLb();
+  if(e.key === 'ArrowRight') navLb(1);
+  if(e.key === 'ArrowLeft') navLb(-1);
+});
+
+/* ── TOTAL COUNT ── */
+document.getElementById('cnt').textContent = document.querySelectorAll('.gallery-item').length;
+</script>
 </body>
-
 </html>
