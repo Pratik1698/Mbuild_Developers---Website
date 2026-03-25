@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>Dream Big, Build Right</b><br>
-  Architecture • Engineering • Contracting
+  Architecture • Engineering • Construction
 </p>
 
 <p align="center">
