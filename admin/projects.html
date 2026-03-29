@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Projects – MBUILD Admin</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="css/admin.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.proj-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.proj-card-admin{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.3s;box-shadow:var(--shadow-sm);}
+.proj-card-admin:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.proj-thumb{height:180px;background:linear-gradient(135deg,var(--blue),var(--blue2));position:relative;overflow:hidden;}
+.proj-thumb img{width:100%;height:100%;object-fit:cover;}
+.proj-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.proj-info{padding:18px;}
+.proj-info h3{font-size:.97rem;font-weight:800;color:var(--text);margin-bottom:5px;line-height:1.3;}
+.proj-meta{font-size:.75rem;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.proj-meta span{display:flex;align-items:center;gap:4px;}
+.proj-actions{display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--border);background:#fafafa;}
+</style>
+</head>
+<body>
+<div class="admin-layout">
+  <div class="main-content" id="mainContent">
+    <div class="page-body" id="pageBody">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Modal -->
+<div class="modal-overlay" id="projModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3><i class="fas fa-hard-hat"></i> <span id="modalTitle">Add Project</span></h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="projForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Project Title *</label>
+            <input type="text" class="form-control" id="pTitle" placeholder="e.g. Residential Building, Kundal" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-control" id="pCategory">
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+              <option value="institutional">Institutional</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Client Name</label>
+            <input type="text" class="form-control" id="pClient" placeholder="Mr. / Dr. / Grampanchayat..."/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" id="pLocation" placeholder="Kundal, Tal. Palus, Sangli"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Total Area</label>
+            <input type="text" class="form-control" id="pArea" placeholder="e.g. 4,000 Sq.Ft."/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Cost</label>
+            <input type="text" class="form-control" id="pCost" placeholder="e.g. ₹1,05,00,000"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Consultant</label>
+            <input type="text" class="form-control" id="pConsultant" placeholder="Ar. Name, City"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-control" id="pStatus">
+              <option value="completed">Completed</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="upcoming">Upcoming</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Completion Date</label>
+            <input type="date" class="form-control" id="pDate"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Featured Project</label>
+            <select class="form-control" id="pFeatured">
+              <option value="false">No</option>
+              <option value="true">Yes – Show on Homepage</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="pDesc" placeholder="Describe the project — structure type, floors, features..." rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cover Image URL</label>
+          <input type="url" class="form-control" id="pImage" placeholder="https://... (upload via Gallery and paste URL here)"/>
+          <div class="form-hint">Upload image via Gallery → copy URL → paste here</div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="deleteProjBtn" style="display:none" onclick="deleteCurrentProj()"><i class="fas fa-trash"></i> Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" id="saveProjBtn" onclick="saveProject()"><i class="fas fa-save"></i> Save Project</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase-config.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+let editingId = null;
+
+(async () => {
+  await initAdminPage('projects', 'Projects', 'Manage civil & construction projects');
+  await loadProjects();
+})();
+
+async function loadProjects(category = '') {
+  const body = document.getElementById('pageBody');
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Loading projects...</div>';
+  const projects = await Projects.getAll(category);
+
+  body.innerHTML = `
+    <div class="card-header" style="background:var(--card-bg);border-radius:16px 16px 0 0;border:1px solid var(--border);border-bottom:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:0">
+      <div class="card-title"><i class="fas fa-hard-hat" style="color:var(--gold)"></i> All Projects (${projects.length})</div>
+      <div class="filters-row">
+        <select class="filter-select" onchange="loadProjects(this.value)">
+          <option value="">All Categories</option>
+          <option value="residential" ${category==='residential'?'selected':''}>Residential</option>
+          <option value="commercial" ${category==='commercial'?'selected':''}>Commercial</option>
+          <option value="institutional" ${category==='institutional'?'selected':''}>Institutional</option>
+          <option value="other" ${category==='other'?'selected':''}>Other</option>
+        </select>
+        <button class="btn btn-gold" onclick="openModal()"><i class="fas fa-plus"></i> Add Project</button>
+      </div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding:24px">
+      ${projects.length === 0 ? `
+        <div class="empty-state">
+          <i class="fas fa-hard-hat"></i>
+          <h3>No projects yet</h3>
+          <p>Click "Add Project" to add your first project.</p>
+        </div>` : `
+      <div class="proj-card-grid">
+        ${projects.map(p => `
+        <div class="proj-card-admin">
+          <div class="proj-thumb">
+            ${p.image_url ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>` : `<div class="proj-thumb-placeholder">🏗️</div>`}
+            ${p.featured ? `<span style="position:absolute;top:10px;right:10px;background:var(--gold);color:var(--navy);font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:20px;text-transform:uppercase">Featured</span>` : ''}
+            <span style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);color:#fff;font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;backdrop-filter:blur(4px)">${p.category}</span>
+          </div>
+          <div class="proj-info">
+            <h3>${p.title}</h3>
+            <div class="proj-meta">
+              ${p.location ? `<span><i class="fas fa-location-dot"></i>${p.location}</span>` : ''}
+              ${p.area ? `<span><i class="fas fa-ruler-combined"></i>${p.area}</span>` : ''}
+              ${p.cost ? `<span><i class="fas fa-indian-rupee-sign"></i>${p.cost}</span>` : ''}
+            </div>
+            <span class="badge badge-${p.status}">${p.status}</span>
+          </div>
+          <div class="proj-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openModal('${p.id}')"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteProj('${p.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>`).join('')}
+      </div>`}
+    </div>`;
+
+  window._projects = projects;
+}
+
+function openModal(id = null) {
+  editingId = id;
+  const proj = id ? window._projects.find(p => p.id === id) : null;
+  document.getElementById('modalTitle').textContent = id ? 'Edit Project' : 'Add New Project';
+  document.getElementById('deleteProjBtn').style.display = id ? 'inline-flex' : 'none';
+
+  const fields = ['Title','Category','Client','Location','Area','Cost','Consultant','Status','Date','Featured','Desc','Image'];
+  const ids    = ['pTitle','pCategory','pClient','pLocation','pArea','pCost','pConsultant','pStatus','pDate','pFeatured','pDesc','pImage'];
+  const keys   = ['title','category','client','location','area','cost','consultant','status','completion_date','featured','description','image_url'];
+
+  ids.forEach((fId,i) => {
+    const el = document.getElementById(fId);
+    if (el) el.value = proj ? (proj[keys[i]] ?? '') : '';
+  });
+
+  document.getElementById('projModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('projModal').classList.remove('open'); editingId = null; }
+
+async function saveProject() {
+  const payload = {
+    title:           document.getElementById('pTitle').value,
+    category:        document.getElementById('pCategory').value,
+    client:          document.getElementById('pClient').value,
+    location:        document.getElementById('pLocation').value,
+    area:            document.getElementById('pArea').value,
+    cost:            document.getElementById('pCost').value,
+    consultant:      document.getElementById('pConsultant').value,
+    status:          document.getElementById('pStatus').value,
+    completion_date: document.getElementById('pDate').value || null,
+    featured:        document.getElementById('pFeatured').value === 'true',
+    description:     document.getElementById('pDesc').value,
+    image_url:       document.getElementById('pImage').value,
+  };
+
+  if (!payload.title) { toast('Project title is required', 'error'); return; }
+
+  const btn = document.getElementById('saveProjBtn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Saving...';
+
+  try {
+    if (editingId) await Projects.update(editingId, payload);
+    else await Projects.add(payload);
+    closeModal(); toast(editingId ? 'Project updated!' : 'Project added!'); await loadProjects();
+  } catch (e) {
+    toast(e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save Project';
+  }
+}
+
+async function deleteCurrentProj() {
+  const ok = await confirmAction('This will permanently delete this project.');
+  if (!ok) return;
+  await Projects.delete(editingId);
+  closeModal(); toast('Project deleted'); await loadProjects();
+}
+
+async function deleteProj(id) {
+  const ok = await confirmAction('This will permanently delete this project.');
+  if (!ok) return;
+  await Projects.delete(id);
+  toast('Project deleted'); await loadProjects();
+}
+</script>
+</body>
+</html>

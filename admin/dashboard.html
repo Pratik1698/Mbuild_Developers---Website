@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard – MBUILD Admin</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"/>
+<link rel="stylesheet" href="css/admin.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.welcome-banner{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,rgba(201,168,76,.25) 100%);border-radius:18px;padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden;color:#fff;}
+.welcome-banner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;}
+.welcome-banner::after{content:'';position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.15) 0%,transparent 70%);}
+.wb-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.wb-title{font-size:1.5rem;font-weight:800;margin-bottom:5px;}
+.wb-sub{font-size:.87rem;color:rgba(255,255,255,.65);}
+.wb-actions{display:flex;gap:10px;flex-shrink:0;}
+.wb-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:9px;font-size:.82rem;font-weight:800;font-family:'DM Sans',sans-serif;transition:.2s;cursor:pointer;border:none;}
+.wb-btn-gold{background:var(--gold);color:var(--navy);}
+.wb-btn-gold:hover{background:var(--gold-light);}
+.wb-btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.2);}
+.wb-btn-ghost:hover{background:rgba(255,255,255,.2);}
+
+/* Recent queries table */
+.q-row-new td{font-weight:600;}
+.q-excerpt{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-muted);font-size:.8rem;}
+.q-name{font-weight:700;}
+.q-phone{font-size:.8rem;color:var(--text-muted);}
+
+/* Quick actions */
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.qa-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.3s;text-decoration:none;display:block;}
+.qa-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.qa-icon{font-size:1.6rem;margin-bottom:10px;}
+.qa-label{font-size:.82rem;font-weight:700;color:var(--text);}
+.qa-sub{font-size:.72rem;color:var(--text-muted);margin-top:2px;}
+
+/* Two columns */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-2-3{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+
+/* Activity */
+.activity-item{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.activity-dot.green{background:var(--success);}
+.activity-dot.gold{background:var(--gold);}
+.activity-dot.blue{background:var(--info);}
+.activity-dot.red{background:var(--error);}
+.activity-text{font-size:.84rem;color:var(--text);line-height:1.5;}
+.activity-time{font-size:.72rem;color:var(--text-muted);margin-top:2px;}
+
+@media(max-width:900px){.grid-2,.grid-2-3,.quick-actions{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="admin-layout">
+  <div class="main-content" id="mainContent">
+    <div class="page-body" id="pageBody">
+      <div class="loading-spinner"><div class="spinner"></div> Loading dashboard...</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase-config.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+(async () => {
+  await initAdminPage('dashboard', 'Dashboard', 'Welcome back to mBuild Admin');
+
+  const body = document.getElementById('pageBody');
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Loading stats...</div>';
+
+  const stats = await Dashboard.getStats();
+  const queries = (await Queries.getAll()).slice(0, 6);
+
+  body.innerHTML = `
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="wb-inner">
+        <div>
+          <div class="wb-title">👋 Welcome, Admin!</div>
+          <div class="wb-sub">Here's what's happening with your website today.</div>
+        </div>
+        <div class="wb-actions">
+          <a href="../index.html" target="_blank" class="wb-btn wb-btn-ghost"><i class="fas fa-eye"></i> View Site</a>
+          <a href="queries.html" class="wb-btn wb-btn-gold"><i class="fas fa-inbox"></i> View Enquiries</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon gold"><i class="fas fa-inbox"></i></div>
+        <div><div class="stat-num">${stats.totalQueries}</div><div class="stat-label">Total Enquiries</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-bell"></i></div>
+        <div><div class="stat-num">${stats.newQueries}</div><div class="stat-label">New Unread</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-hard-hat"></i></div>
+        <div><div class="stat-num">${stats.totalProjects}</div><div class="stat-label">Projects</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-images"></i></div>
+        <div><div class="stat-num">${stats.totalImages}</div><div class="stat-label">Gallery Images</div></div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a class="qa-card" href="projects.html">
+        <div class="qa-icon">🏗️</div>
+        <div class="qa-label">Manage Projects</div>
+        <div class="qa-sub">Add, edit, delete projects</div>
+      </a>
+      <a class="qa-card" href="gallery.html">
+        <div class="qa-icon">📸</div>
+        <div class="qa-label">Upload Images</div>
+        <div class="qa-sub">Manage photo gallery</div>
+      </a>
+      <a class="qa-card" href="content.html">
+        <div class="qa-icon">✏️</div>
+        <div class="qa-label">Edit Content</div>
+        <div class="qa-sub">Update website text</div>
+      </a>
+    </div>
+
+    <!-- Recent Queries -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-inbox"></i> Recent Enquiries</div>
+        <a href="queries.html" class="btn btn-ghost btn-sm">View All →</a>
+      </div>
+      <div class="table-wrap">
+        ${queries.length === 0 ? `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No enquiries yet</h3>
+            <p>Contact form submissions will appear here.</p>
+          </div>` : `
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Phone</th><th>Project</th><th>Message</th><th>Status</th><th>Date</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${queries.map(q => `
+            <tr class="${q.status === 'new' ? 'q-row-new' : ''}">
+              <td><div class="q-name">${q.name}</div></td>
+              <td><div class="q-phone">${q.phone}</div></td>
+              <td>${q.project_type || '—'}</td>
+              <td><div class="q-excerpt">${q.message}</div></td>
+              <td><span class="badge badge-${q.status}">${q.status}</span></td>
+              <td style="font-size:.78rem;color:var(--text-muted)">${new Date(q.created_at).toLocaleDateString('en-IN')}</td>
+              <td><a href="queries.html" class="btn btn-ghost btn-sm btn-icon"><i class="fas fa-arrow-right"></i></a></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`}
+      </div>
+    </div>`;
+})();
+</script>
+</body>
+</html>

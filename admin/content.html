@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Content – MBUILD Admin</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="css/admin.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.content-tabs{display:flex;gap:4px;background:#f1f5f9;border-radius:12px;padding:4px;flex-wrap:wrap;margin-bottom:24px;}
+.content-tab{padding:9px 18px;border-radius:9px;border:none;background:transparent;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;color:var(--text-muted);}
+.content-tab.active{background:#fff;color:var(--text);box-shadow:var(--shadow-sm);}
+.content-tab:hover:not(.active){color:var(--text);}
+.section-panel{display:none;}
+.section-panel.active{display:block;}
+.save-indicator{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--success);padding:4px 10px;background:rgba(22,163,74,.1);border-radius:20px;opacity:0;transition:opacity .3s;}
+.save-indicator.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="admin-layout">
+  <div class="main-content" id="mainContent">
+    <div class="page-body" id="pageBody">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase-config.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+let allContent = {};
+
+(async () => {
+  await initAdminPage('content', 'CMS Content', 'Edit website text and information');
+  allContent = await Content.getAll();
+  renderCMS();
+})();
+
+function renderCMS() {
+  const c = allContent;
+  const hero    = c.hero    || {};
+  const about   = c.about   || {};
+  const contact = c.contact || {};
+  const footer  = c.footer  || {};
+  const social  = c.social  || {};
+
+  document.getElementById('pageBody').innerHTML = `
+    <div class="content-tabs">
+      <button class="content-tab active" onclick="switchTab('hero',this)">🏠 Hero Section</button>
+      <button class="content-tab" onclick="switchTab('about',this)">🏢 About Us</button>
+      <button class="content-tab" onclick="switchTab('contact',this)">📞 Contact Info</button>
+      <button class="content-tab" onclick="switchTab('footer',this)">📌 Footer</button>
+      <button class="content-tab" onclick="switchTab('social',this)">🔗 Social Links</button>
+    </div>
+
+    <!-- HERO -->
+    <div class="section-panel active" id="panel-hero">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-home"></i> Hero Section</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="save-indicator" id="si-hero"><i class="fas fa-check"></i> Saved!</span>
+            <button class="btn btn-gold" onclick="saveSection('hero')"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group"><label class="form-label">Badge Text</label><input class="form-control" id="h-badge" value="${esc(hero.badge||'')}"/></div>
+          <div class="form-group"><label class="form-label">Main Heading</label><input class="form-control" id="h-title" value="${esc(hero.title||'')}"/></div>
+          <div class="form-group"><label class="form-label">Subtitle / Description</label><textarea class="form-control" id="h-subtitle" rows="3">${esc(hero.subtitle||'')}</textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="section-panel" id="panel-about">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-building"></i> About Us Section</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="save-indicator" id="si-about"><i class="fas fa-check"></i> Saved!</span>
+            <button class="btn btn-gold" onclick="saveSection('about')"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group"><label class="form-label">Section Title</label><input class="form-control" id="a-title" value="${esc(about.title||'')}"/></div>
+          <div class="form-group"><label class="form-label">Main Description</label><textarea class="form-control" id="a-body" rows="5">${esc(about.body||'')}</textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Established Year</label><input class="form-control" id="a-established" value="${esc(about.established||'2016')}"/></div>
+            <div class="form-group"><label class="form-label">Projects Completed</label><input class="form-control" id="a-projects" value="${esc(about.projects||'250+')}"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Years Experience</label><input class="form-control" id="a-experience" value="${esc(about.experience||'9+')}"/></div>
+            <div class="form-group"><label class="form-label">Annual Turnover</label><input class="form-control" id="a-turnover" value="${esc(about.turnover||'₹1.31Cr')}"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section-panel" id="panel-contact">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-phone"></i> Contact Information</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="save-indicator" id="si-contact"><i class="fas fa-check"></i> Saved!</span>
+            <button class="btn btn-gold" onclick="saveSection('contact')"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Phone 1</label><input class="form-control" id="c-phone1" value="${esc(contact.phone1||'')}"/></div>
+            <div class="form-group"><label class="form-label">Phone 2</label><input class="form-control" id="c-phone2" value="${esc(contact.phone2||'')}"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Email 1</label><input class="form-control" id="c-email1" value="${esc(contact.email1||'')}"/></div>
+            <div class="form-group"><label class="form-label">Email 2</label><input class="form-control" id="c-email2" value="${esc(contact.email2||'')}"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Office Address</label><textarea class="form-control" id="c-address" rows="3">${esc(contact.address||'')}</textarea></div>
+          <div class="form-group"><label class="form-label">GST Number</label><input class="form-control" id="c-gst" value="${esc(contact.gst||'')}"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="section-panel" id="panel-footer">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-layer-group"></i> Footer Content</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="save-indicator" id="si-footer"><i class="fas fa-check"></i> Saved!</span>
+            <button class="btn btn-gold" onclick="saveSection('footer')"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group"><label class="form-label">Tagline</label><input class="form-control" id="f-tagline" value="${esc(footer.tagline||'')}"/></div>
+          <div class="form-group"><label class="form-label">Company Description</label><textarea class="form-control" id="f-description" rows="4">${esc(footer.description||'')}</textarea></div>
+          <div class="form-group"><label class="form-label">Copyright Text</label><input class="form-control" id="f-copyright" value="${esc(footer.copyright||'')}"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="section-panel" id="panel-social">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-share-nodes"></i> Social Media Links</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="save-indicator" id="si-social"><i class="fas fa-check"></i> Saved!</span>
+            <button class="btn btn-gold" onclick="saveSection('social')"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group"><label class="form-label"><i class="fab fa-whatsapp" style="color:#25d366"></i> WhatsApp Link</label><input class="form-control" id="s-whatsapp" value="${esc(social.whatsapp||'')}"/><div class="form-hint">e.g. https://wa.me/918600928493</div></div>
+          <div class="form-group"><label class="form-label"><i class="fab fa-instagram" style="color:#e1306c"></i> Instagram URL</label><input class="form-control" id="s-instagram" value="${esc(social.instagram||'')}"/></div>
+          <div class="form-group"><label class="form-label"><i class="fab fa-facebook" style="color:#1877f2"></i> Facebook URL</label><input class="form-control" id="s-facebook" value="${esc(social.facebook||'')}"/></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function saveSection(section) {
+  let data = {};
+  if (section === 'hero')    data = { badge: v('h-badge'), title: v('h-title'), subtitle: v('h-subtitle') };
+  if (section === 'about')   data = { title: v('a-title'), body: v('a-body'), established: v('a-established'), projects: v('a-projects'), experience: v('a-experience'), turnover: v('a-turnover') };
+  if (section === 'contact') data = { phone1: v('c-phone1'), phone2: v('c-phone2'), email1: v('c-email1'), email2: v('c-email2'), address: v('c-address'), gst: v('c-gst') };
+  if (section === 'footer')  data = { tagline: v('f-tagline'), description: v('f-description'), copyright: v('f-copyright') };
+  if (section === 'social')  data = { whatsapp: v('s-whatsapp'), instagram: v('s-instagram'), facebook: v('s-facebook') };
+
+  try {
+    await Content.update(section, data);
+    const si = document.getElementById('si-' + section);
+    si.classList.add('show');
+    setTimeout(() => si.classList.remove('show'), 2500);
+    toast('Content saved!');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+</script>
+</body>
+</html>

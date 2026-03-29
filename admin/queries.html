@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enquiries – MBUILD Admin</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="css/admin.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.q-full-msg{background:#f8fafc;border-radius:10px;padding:14px;font-size:.87rem;color:var(--text);line-height:1.7;border:1px solid var(--border);margin-top:12px;}
+.q-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.q-detail-item label{font-size:.68rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:3px;}
+.q-detail-item p{font-size:.88rem;color:var(--text);font-weight:600;}
+.status-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.status-tab{padding:6px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.76rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
+.status-tab:hover{border-color:var(--gold);}
+.status-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="admin-layout">
+  <div class="main-content" id="mainContent">
+    <div class="page-body" id="pageBody">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="queryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-envelope-open"></i> <span id="mName">Enquiry Details</span></h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="q-detail-grid">
+        <div class="q-detail-item"><label>Name</label><p id="mNameD">—</p></div>
+        <div class="q-detail-item"><label>Phone</label><p id="mPhone">—</p></div>
+        <div class="q-detail-item"><label>Email</label><p id="mEmail">—</p></div>
+        <div class="q-detail-item"><label>Project Type</label><p id="mType">—</p></div>
+        <div class="q-detail-item"><label>Location</label><p id="mLoc">—</p></div>
+        <div class="q-detail-item"><label>Received</label><p id="mDate">—</p></div>
+      </div>
+      <div class="q-detail-item"><label>Message</label><div class="q-full-msg" id="mMsg">—</div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="mDelete"><i class="fas fa-trash"></i> Delete</button>
+      <button class="btn btn-success" id="mResolve"><i class="fas fa-check"></i> Mark Resolved</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase-config.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+let currentFilter = '';
+let searchTimeout;
+let currentQueryId = null;
+
+(async () => {
+  await initAdminPage('queries', 'Enquiries', 'Manage contact form submissions');
+  await renderPage();
+})();
+
+async function renderPage(search = '', status = '') {
+  const body = document.getElementById('pageBody');
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Loading enquiries...</div>';
+
+  const [queries, stats] = await Promise.all([Queries.getAll(search, status), Queries.getStats()]);
+
+  body.innerHTML = `
+    <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+      <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-inbox"></i></div><div><div class="stat-num">${stats.total}</div><div class="stat-label">Total</div></div></div>
+      <div class="stat-card"><div class="stat-icon red"><i class="fas fa-circle-dot"></i></div><div><div class="stat-num">${stats.new}</div><div class="stat-label">New</div></div></div>
+      <div class="stat-card"><div class="stat-icon gold"><i class="fas fa-eye"></i></div><div><div class="stat-num">${stats.read}</div><div class="stat-label">Read</div></div></div>
+      <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div><div class="stat-num">${stats.resolved}</div><div class="stat-label">Resolved</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-inbox"></i> All Enquiries</div>
+        <div class="filters-row">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" placeholder="Search name, phone, email..." id="searchInput" value="${search}" style="min-width:220px"/>
+          </div>
+          <div class="status-tabs">
+            <button class="status-tab ${!status?'active':''}" onclick="filterStatus('')">All</button>
+            <button class="status-tab ${status==='new'?'active':''}" onclick="filterStatus('new')">New</button>
+            <button class="status-tab ${status==='read'?'active':''}" onclick="filterStatus('read')">Read</button>
+            <button class="status-tab ${status==='resolved'?'active':''}" onclick="filterStatus('resolved')">Resolved</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        ${queries.length === 0 ? `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No enquiries found</h3>
+            <p>Try a different search or filter.</p>
+          </div>` : `
+        <table>
+          <thead>
+            <tr><th>#</th><th>Name</th><th>Phone</th><th>Project</th><th>Location</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            ${queries.map((q,i) => `
+            <tr class="${q.status === 'new' ? 'q-row-new' : ''}" style="cursor:pointer" onclick="openQuery('${q.id}')">
+              <td style="color:var(--text-muted);font-size:.78rem">${i+1}</td>
+              <td><strong>${q.name}</strong></td>
+              <td><a href="tel:${q.phone}" style="color:var(--blue);font-weight:600" onclick="event.stopPropagation()">${q.phone}</a></td>
+              <td>${q.project_type || '—'}</td>
+              <td>${q.location || '—'}</td>
+              <td><span class="badge badge-${q.status}">${q.status}</span></td>
+              <td style="font-size:.78rem;color:var(--text-muted);white-space:nowrap">${new Date(q.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</td>
+              <td onclick="event.stopPropagation()">
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-ghost btn-sm btn-icon" title="View" onclick="openQuery('${q.id}')"><i class="fas fa-eye"></i></button>
+                  <button class="btn btn-success btn-sm btn-icon" title="Mark Resolved" onclick="quickResolve('${q.id}')"><i class="fas fa-check"></i></button>
+                  <button class="btn btn-danger btn-sm btn-icon" title="Delete" onclick="deleteQ('${q.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`}
+      </div>
+    </div>`;
+
+  // Store queries for modal use
+  window._queries = queries;
+
+  // Search
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => renderPage(e.target.value, currentFilter), 400);
+  });
+}
+
+function filterStatus(s) { currentFilter = s; renderPage('', s); }
+
+const allQ = () => window._queries || [];
+
+function openQuery(id) {
+  const q = allQ().find(x => x.id === id);
+  if (!q) return;
+  currentQueryId = id;
+  document.getElementById('mName').textContent  = q.name;
+  document.getElementById('mNameD').textContent = q.name;
+  document.getElementById('mPhone').textContent = q.phone;
+  document.getElementById('mEmail').textContent = q.email || '—';
+  document.getElementById('mType').textContent  = q.project_type || '—';
+  document.getElementById('mLoc').textContent   = q.location || '—';
+  document.getElementById('mDate').textContent  = new Date(q.created_at).toLocaleString('en-IN');
+  document.getElementById('mMsg').textContent   = q.message;
+  document.getElementById('queryModal').classList.add('open');
+  if (q.status === 'new') Queries.updateStatus(id, 'read').catch(()=>{});
+}
+
+function closeModal() { document.getElementById('queryModal').classList.remove('open'); currentQueryId = null; }
+
+document.getElementById('mDelete').onclick = async () => {
+  if (!currentQueryId) return;
+  const ok = await confirmAction('This will permanently delete this enquiry.');
+  if (!ok) return;
+  await Queries.delete(currentQueryId);
+  closeModal(); toast('Enquiry deleted'); renderPage('', currentFilter);
+};
+
+document.getElementById('mResolve').onclick = async () => {
+  if (!currentQueryId) return;
+  await Queries.updateStatus(currentQueryId, 'resolved');
+  closeModal(); toast('Marked as resolved'); renderPage('', currentFilter);
+};
+
+async function quickResolve(id) {
+  await Queries.updateStatus(id, 'resolved');
+  toast('Marked as resolved'); renderPage('', currentFilter);
+}
+
+async function deleteQ(id) {
+  const ok = await confirmAction('This will permanently delete this enquiry.');
+  if (!ok) return;
+  await Queries.delete(id);
+  toast('Enquiry deleted'); renderPage('', currentFilter);
+}
+</script>
+</body>
+</html>

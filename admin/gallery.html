@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gallery – MBUILD Admin</title>
+<link rel="icon" type="image/png" href="../assets/images/logo_new.png"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="css/admin.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+.cat-tab{padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.76rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
+.cat-tab:hover{border-color:var(--gold);}
+.cat-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.upload-progress{background:var(--border);border-radius:10px;height:6px;margin-top:10px;overflow:hidden;display:none;}
+.upload-progress-bar{height:100%;background:var(--gold);border-radius:10px;width:0%;transition:width .3s;}
+.img-count-badge{background:var(--gold);color:var(--navy);font-size:.66rem;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:8px;}
+.copy-url-btn{background:rgba(201,168,76,.12);border:none;color:var(--gold);padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;}
+.copy-url-btn:hover{background:var(--gold);color:var(--navy);}
+</style>
+</head>
+<body>
+<div class="admin-layout">
+  <div class="main-content" id="mainContent">
+    <div class="page-body" id="pageBody">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase-config.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+let currentCat = '';
+
+(async () => {
+  await initAdminPage('gallery', 'Gallery', 'Upload and manage website images');
+  await renderGallery();
+})();
+
+async function renderGallery(category = '') {
+  currentCat = category;
+  const body = document.getElementById('pageBody');
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Loading gallery...</div>';
+  const images = await Gallery.getAll(category);
+  const cats = ['home','projects','interior','gallery','about','services','general'];
+
+  body.innerHTML = `
+    <!-- Upload Zone -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-cloud-upload-alt"></i> Upload Images</div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-control" id="uploadCat">
+                ${cats.map(c => `<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div style="flex:2;min-width:280px">
+            <label class="upload-zone" for="fileInput" id="uploadZone">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag & drop or <strong>click to browse</strong></p>
+              <p style="font-size:.75rem;margin-top:4px">JPG, PNG, WEBP — Max 5MB each</p>
+              <input type="file" id="fileInput" multiple accept="image/*"/>
+            </label>
+            <div class="upload-progress" id="uploadProgress">
+              <div class="upload-progress-bar" id="uploadBar"></div>
+            </div>
+            <div id="uploadStatus" style="font-size:.78rem;color:var(--text-muted);margin-top:6px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-images"></i> Images
+          <span class="img-count-badge">${images.length}</span>
+        </div>
+        <div class="cat-tabs">
+          <button class="cat-tab ${!category?'active':''}" onclick="renderGallery('')">All</button>
+          ${cats.map(c => `<button class="cat-tab ${category===c?'active':''}" onclick="renderGallery('${c}')">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('')}
+        </div>
+      </div>
+      <div class="card-body">
+        ${images.length === 0 ? `
+          <div class="empty-state">
+            <i class="fas fa-images"></i>
+            <h3>No images in this category</h3>
+            <p>Upload some images above to get started.</p>
+          </div>` : `
+        <div class="img-grid">
+          ${images.map(img => `
+          <div class="img-tile" id="tile-${img.id}">
+            <img src="${img.image_url}" alt="${img.title||''}" loading="lazy"/>
+            <span class="img-tile-cat">${img.category}</span>
+            <div class="img-tile-overlay">
+              <button class="btn btn-ghost btn-sm btn-icon" title="Copy URL" onclick="copyUrl('${img.image_url}')"><i class="fas fa-copy"></i></button>
+              <button class="btn btn-danger btn-sm btn-icon" title="Delete" onclick="deleteImg('${img.id}','${img.image_url}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <p style="font-size:.78rem;color:var(--text-muted)"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Hover any image → click <i class="fas fa-copy"></i> to copy URL for use in Projects or Content.</p>
+        </div>`}
+      </div>
+    </div>`;
+
+  window._images = images;
+
+  // Upload handler
+  const fileInput = document.getElementById('fileInput');
+  const zone      = document.getElementById('uploadZone');
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+  fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+}
+
+async function handleFiles(files) {
+  if (!files.length) return;
+  const cat      = document.getElementById('uploadCat').value;
+  const progress = document.getElementById('uploadProgress');
+  const bar      = document.getElementById('uploadBar');
+  const status   = document.getElementById('uploadStatus');
+  progress.style.display = 'block';
+  let done = 0;
+  for (const file of files) {
+    if (file.size > 5 * 1024 * 1024) { toast(`${file.name} exceeds 5MB limit`, 'error'); continue; }
+    try {
+      status.textContent = `Uploading ${file.name}...`;
+      await Gallery.uploadImage(file, cat);
+      done++;
+      bar.style.width = `${(done/files.length)*100}%`;
+    } catch(e) {
+      toast(`Failed: ${file.name} — ${e.message}`, 'error');
+    }
+  }
+  toast(`${done} image${done !== 1 ? 's' : ''} uploaded!`);
+  progress.style.display = 'none';
+  bar.style.width = '0%';
+  status.textContent = '';
+  await renderGallery(currentCat);
+}
+
+async function deleteImg(id, url) {
+  const ok = await confirmAction('This will permanently delete this image.');
+  if (!ok) return;
+  try { await Gallery.delete(id, url); toast('Image deleted'); await renderGallery(currentCat); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(() => toast('URL copied to clipboard!'));
+}
+</script>
+</body>
+</html>

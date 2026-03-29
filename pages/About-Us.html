@@ -643,10 +643,10 @@ img{display:block;} a{text-decoration:none;} button{font-family:'DM Sans',sans-s
     </div>
 
     <div class="award-photo-tile reveal d2" onclick="openApLb(2)">
-      <img src="../assets/images/Temple_Projects/temp_img1.jpeg" alt="Kumbheshwar Mandir" loading="lazy"/>
-      <span class="award-photo-badge">Heritage</span>
+      <img src="../assets/images/certificates/certificate.jpeg" alt="gaurav puraskar 2023 certificate" loading="lazy"/>
+      <span class="award-photo-badge">certificate</span>
       <div class="award-photo-overlay">
-        <div><div class="apo-label">Temple</div><div class="apo-title">Kumbheshwar Mahadev Mandir</div></div>
+        <div><div class="apo-label">gaurav puraskar 2023 certificate</div><div class="apo-title">gaurav puraskar 2023 certificate</div></div>
       </div>
     </div>
 
@@ -852,7 +852,7 @@ document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe
 const apPhotos = [
   {src:'../assets/images/certificates/maha_2023.jpeg',    label:'maharashtra udyog gaurav puraskar 2023'},
   {src:'../assets/images/certificates/2_maha_2023.jpeg',  label:'maharashtra udyog gaurav puraskar 2023'},
-  {src:'../assets/images/Temple_Projects/temp_img1.jpeg',       label:'Kumbheshwar Mahadev Mandir'},
+  {src:'../assets/images/certificates/certificate.jpeg',       label:'maharashtra udyog gaurav puraskar 2023'},
   {src:'../assets/images/houses/project_4/img_1.jpg',           label:'Premium Bunglow — Palus'},
   {src:'../assets/images/houses/project_3/img_2.jpg',           label:'Green Building — Kundal'},
   {src:'../assets/images/mill_Project/mill_img.jpg',            label:'Industrial Mill Project'},
@@ -868,5 +868,6 @@ function navApLb(d){apIdx=(apIdx+d+apPhotos.length)%apPhotos.length;apImg.style.
 apLb.addEventListener('click',e=>{if(e.target===apLb)closeApLb();});
 document.addEventListener('keydown',e=>{if(!apLb.classList.contains('open'))return;if(e.key==='Escape')closeApLb();if(e.key==='ArrowRight')navApLb(1);if(e.key==='ArrowLeft')navApLb(-1);});
 </script>
+<script src="../assets/js/website.js"></script>
 </body>
 </html>

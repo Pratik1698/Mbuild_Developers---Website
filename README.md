@@ -34,6 +34,18 @@
 
 ---
 
+## 💻 Website Development Team
+
+This website was designed and developed by the MBUILD Developers web team.
+
+| Name | Role | Contribution |
+|------|------|-------------|
+| Pratik Patil | Frontend Developer | UI Design, Layout, Animations |
+| Prajakta Salunkhe | UI/UX Designer | Visual Design, Styling |
+| Sakshi Chougule | Content & Assets | Project Data, Images, Information |
+| Shreyash Kashid | Backend Developer | Admin page |
+---
+
 ## 📁 File Structure
 
 ```bash
@@ -56,8 +68,28 @@ mbuild-developers-website/
     ├── Photo-Gallary.html
     └── Our-product-Services.html
 ```
+##  🚀 Quick Start
 
----
+```bash
+
+git clone https://github.com/Pratik1698/Mbuild_Developers---Website.git
+cd mbuild-developers-website
+open index.html
+
+```
+## 🛠 Tech Stack
+```md
+
+
+- HTML5  
+- CSS3  
+- JavaScript  
+- EmailJS  
+- Google Maps
+```
+
+
+
 
 ## 📄 Pages — What's Inside Each
 
