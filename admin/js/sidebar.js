@@ -2,12 +2,12 @@
 
 function renderSidebar(activePage) {
   const navItems = [
-    { id:'dashboard',  icon:'fas fa-gauge-high',     label:'Dashboard',   href:'dashboard.html' },
-    { id:'queries',    icon:'fas fa-inbox',           label:'Enquiries',   href:'queries.html',   badge:'new' },
-    { id:'projects',   icon:'fas fa-hard-hat',        label:'Projects',    href:'projects.html' },
-    { id:'gallery',    icon:'fas fa-images',          label:'Gallery',     href:'gallery.html' },
-    { id:'content',    icon:'fas fa-pen-nib',         label:'CMS Content', href:'content.html' },
-    { id:'settings',   icon:'fas fa-sliders',         label:'Settings',    href:'settings.html' },
+    { id: 'dashboard', icon: 'fas fa-gauge-high', label: 'Dashboard', href: 'dashboard.html' },
+    { id: 'queries', icon: 'fas fa-inbox', label: 'Enquiries', href: 'queries.html', badge: 'new' },
+    { id: 'projects', icon: 'fas fa-hard-hat', label: 'Projects', href: 'projects.html' },
+    { id: 'gallery', icon: 'fas fa-images', label: 'Gallery', href: 'gallery.html' },
+    { id: 'content', icon: 'fas fa-pen-nib', label: 'CMS Content', href: 'content.html' },
+    { id: 'settings', icon: 'fas fa-sliders', label: 'Settings', href: 'settings.html' },
   ];
 
   const html = `
@@ -47,20 +47,40 @@ function renderSidebar(activePage) {
     await Auth.logout();
   };
 
-  // Mobile toggle
-  const toggle = document.getElementById('menuToggle');
-  const sb     = document.getElementById('sidebar');
-  if (toggle) toggle.onclick = () => sb.classList.toggle('open');
-
-  // Close sidebar on outside click (mobile)
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 900 && !sb.contains(e.target) && e.target !== toggle) {
-      sb.classList.remove('open');
-    }
-  });
+  // Add mobile overlay
+  if (!document.getElementById('sidebarOverlay')) {
+    document.body.insertAdjacentHTML('beforeend', '<div id="sidebarOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:none;backdrop-filter:blur(2px)"></div>');
+  }
 
   // Load new query count for badge
   loadQueryBadge();
+}
+
+function initMobileMenu() {
+  const toggle = document.getElementById('menuToggle');
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+
+  if (toggle && sb && overlay) {
+    toggle.onclick = (e) => {
+      e.stopPropagation();
+      sb.classList.toggle('open');
+      overlay.style.display = sb.classList.contains('open') ? 'block' : 'none';
+    };
+
+    overlay.onclick = () => {
+      sb.classList.remove('open');
+      overlay.style.display = 'none';
+    };
+
+    // Close on link click
+    sb.querySelectorAll('.nav-item').forEach(link => {
+      link.addEventListener('click', () => {
+        sb.classList.remove('open');
+        overlay.style.display = 'none';
+      });
+    });
+  }
 }
 
 async function loadQueryBadge() {
@@ -71,11 +91,11 @@ async function loadQueryBadge() {
       badge.textContent = stats.new;
       badge.style.display = 'inline-flex';
     }
-  } catch(e) {}
+  } catch (e) { }
 }
 
 function renderTopbar(title, subtitle = '') {
-  const date = new Date().toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+  const date = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
   const html = `
 <div class="topbar">
   <div class="topbar-left">
@@ -107,4 +127,5 @@ async function initAdminPage(pageName, title, subtitle) {
   if (!user) return;
   renderSidebar(pageName);
   renderTopbar(title, subtitle);
+  initMobileMenu();
 }

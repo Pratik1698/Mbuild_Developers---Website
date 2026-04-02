@@ -123,21 +123,21 @@ button{cursor:pointer;}
 .card-featured{position:absolute;top:16px;right:16px;z-index:4;background:#e8414d;color:#fff;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-family:'DM Sans',sans-serif;}
 
 /* List view */
-.gallery-grid.list-view{display:flex;flex-direction:column;gap:16px;}
-.gallery-grid.list-view .proj-card{grid-column:unset!important;grid-row:unset!important;}
-.gallery-grid.list-view .proj-card .card-photo{height:220px!important;}
-.gallery-grid.list-view .proj-card-inner{display:flex;}
-.gallery-grid.list-view .proj-card-inner .card-photo{width:380px;flex-shrink:0;height:100%!important;}
-.card-list-body{display:none;padding:28px 32px;background:#fff;flex:1;flex-direction:column;justify-content:center;}
-.gallery-grid.list-view .card-list-body{display:flex;}
-.clb-cat{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-family:'DM Sans',sans-serif;}
-.clb-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--blue);margin-bottom:8px;}
-.clb-loc{font-size:.82rem;color:var(--text-muted);margin-bottom:6px;font-family:'DM Sans',sans-serif;}
-.clb-cost{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:14px;font-family:'DM Sans',sans-serif;}
-.clb-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.clb-tag{background:#f0ece2;color:var(--text-muted);font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:10px;text-transform:uppercase;}
-.clb-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--blue);padding:9px 20px;border-radius:8px;font-size:.8rem;font-weight:800;font-family:'DM Sans',sans-serif;text-decoration:none;width:fit-content;transition:.2s;}
-.clb-btn:hover{background:var(--gold-light);}
+.gallery-grid.list-view { display:flex; flex-direction:column; gap:32px; }
+.gallery-grid.list-view .proj-card { grid-column:unset !important; grid-row:unset !important; transform: none !important; opacity: 1 !important; margin-bottom: 16px; height: auto; }
+.gallery-grid.list-view .proj-card .card-photo { height:260px !important; }
+.gallery-grid.list-view .proj-card-inner { display:flex; flex-direction:row; height: 100%; align-items: stretch; }
+.gallery-grid.list-view .proj-card-inner .card-photo { width: 420px; flex-shrink:0; height:auto !important; }
+.card-list-body { display:none; padding:32px 40px; background:#fff; flex:1; flex-direction:column; justify-content:center; }
+.gallery-grid.list-view .card-list-body { display:flex; }
+.clb-cat { font-size:.7rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; font-family:'DM Sans',sans-serif; }
+.clb-title { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:800; color:var(--blue); margin-bottom:10px; line-height: 1.3; }
+.clb-loc { font-size:.85rem; color:var(--text-muted); margin-bottom:8px; font-family:'DM Sans',sans-serif; }
+.clb-cost { font-size:.88rem; font-weight:700; color:var(--blue); margin-bottom:16px; font-family:'DM Sans',sans-serif; }
+.clb-tags { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+.clb-tag { background:#f0ece2; color:var(--text-muted); font-size:.7rem; font-weight:700; padding:6px 14px; border-radius:12px; text-transform:uppercase; }
+.clb-btn { display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:var(--blue); padding:10px 24px; border-radius:8px; font-size:.85rem; font-weight:800; font-family:'DM Sans',sans-serif; text-decoration:none; width:fit-content; transition:.2s; }
+.clb-btn:hover { background:var(--gold-light); }
 
 /* ── CTA ── */
 .cta-section{background:var(--blue);padding:72px 60px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;}
@@ -222,6 +222,9 @@ button{cursor:pointer;}
     <div class="subtitle-badge">
       <p class="tagline">Architecture, Engineer &amp; Contractors</p>
     </div>
+  </div>
+  <div class="hamburger">
+    <i class="fas fa-bars"></i>
   </div>
   <nav class="navbar">
     <a href="../index.html">Home</a>

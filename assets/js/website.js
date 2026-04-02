@@ -80,10 +80,10 @@ async function loadSettings() {
 
     // Section visibility
     const sections = {
-      show_hero:         '[data-section="hero"], .hero',
-      show_services:     '[data-section="services"], .services-section',
-      show_gallery:      '[data-section="gallery"], .gallery-preview',
-      show_projects:     '[data-section="projects"], .civil-preview, .civil-section',
+      show_hero: '[data-section="hero"], .hero',
+      show_services: '[data-section="services"], .services-section',
+      show_gallery: '[data-section="gallery"], .gallery-preview',
+      show_projects: '[data-section="projects"], .civil-preview, .civil-section',
       show_testimonials: '[data-section="testimonials"], .testimonials-section, .test-section',
       show_certificates: '[data-section="certificates"], .certs-section',
     };
@@ -97,10 +97,10 @@ async function loadSettings() {
     if (s.emailjs_public_key && typeof emailjs !== 'undefined') {
       emailjs.init(s.emailjs_public_key);
     }
-    window.EMAILJS_SERVICE_ID  = s.emailjs_service_id  || '';
+    window.EMAILJS_SERVICE_ID = s.emailjs_service_id || '';
     window.EMAILJS_TEMPLATE_ID = s.emailjs_template_id || '';
 
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Settings load failed:', e.message);
   }
 }
@@ -117,23 +117,23 @@ async function loadContent() {
 
     /* ── HERO SECTION ── */
     const hero = c.hero || {};
-    setText('[data-cms="hero-title"]',    hero.title);
+    setText('[data-cms="hero-title"]', hero.title);
     setText('[data-cms="hero-subtitle"]', hero.subtitle);
-    setText('[data-cms="hero-badge"]',    hero.badge);
+    setText('[data-cms="hero-badge"]', hero.badge);
     // Also target common hero class patterns
     const h1Hero = document.querySelector('.hero h1, .hero-h1');
     if (h1Hero && hero.title) injectHTML(h1Hero, hero.title);
 
     /* ── ABOUT / STORY SECTION ── */
     const about = c.about || {};
-    setText('[data-cms="about-title"]',       about.title);
-    setText('[data-cms="about-body"]',         about.body);
-    setText('[data-cms="about-established"]',  about.established);
-    setText('[data-cms="about-projects"]',     about.projects);
-    setText('[data-cms="about-experience"]',   about.experience);
-    setText('[data-cms="about-turnover"]',     about.turnover);
+    setText('[data-cms="about-title"]', about.title);
+    setText('[data-cms="about-body"]', about.body);
+    setText('[data-cms="about-established"]', about.established);
+    setText('[data-cms="about-projects"]', about.projects);
+    setText('[data-cms="about-experience"]', about.experience);
+    setText('[data-cms="about-turnover"]', about.turnover);
     // Stats bar (trust-bar on homepage)
-    setStatByIndex(0, about.projects  || '250+');
+    setStatByIndex(0, about.projects || '250+');
     setStatByIndex(1, about.experience || '9+');
 
     /* ── CONTACT SECTION ── */
@@ -143,11 +143,11 @@ async function loadContent() {
     setText('[data-cms="contact-email1"]', contact.email1);
     setText('[data-cms="contact-email2"]', contact.email2);
     setText('[data-cms="contact-address"]', contact.address);
-    setText('[data-cms="contact-gst"]',    contact.gst);
+    setText('[data-cms="contact-gst"]', contact.gst);
     // Update all phone links
     if (contact.phone1) {
       document.querySelectorAll(`[href="tel:${contact.phone1}"], [href^="tel:+91860"]`).forEach(el => {
-        el.href = `tel:${contact.phone1.replace(/\s/g,'')}`;
+        el.href = `tel:${contact.phone1.replace(/\s/g, '')}`;
       });
     }
     // Update email links
@@ -161,9 +161,9 @@ async function loadContent() {
 
     /* ── FOOTER SECTION ── */
     const footer = c.footer || {};
-    setText('[data-cms="footer-tagline"]',     footer.tagline);
+    setText('[data-cms="footer-tagline"]', footer.tagline);
     setText('[data-cms="footer-description"]', footer.description);
-    setText('[data-cms="footer-copyright"]',   footer.copyright);
+    setText('[data-cms="footer-copyright"]', footer.copyright);
     // .footer-bottom copyright
     const fb = document.querySelector('.footer-bottom');
     if (fb && footer.copyright) fb.textContent = footer.copyright;
@@ -172,7 +172,7 @@ async function loadContent() {
     const social = c.social || {};
     updateSocialLinks(social);
 
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Content load failed:', e.message);
   }
 }
@@ -182,28 +182,44 @@ async function loadContent() {
 ══════════════════════════════════ */
 async function loadProjects() {
   const grid = document.getElementById('galleryGrid') || document.querySelector('.proj-grid') || document.querySelector('.projects-scroll');
-  if (!grid) return;
+  if (!grid || !grid.dataset.dynamic) return;
+
+  const isInterior = PAGE.includes('Interior-projects');
+  const isCivil = PAGE.includes('Civil-Projects');
+
+  // Define category groups to prevent merging
+  const interiorCats = ['bedroom', 'kitchen', 'clinic', 'living', 'dining', 'interior'];
+  const civilCats = ['residential', 'institutional', 'commercial', 'industrial', 'other'];
 
   try {
-    const projects = await sbFetch('projects', 'select=*&order=created_at.desc&status=eq.completed');
+    let queryParams = 'select=*&order=created_at.desc&status=eq.completed';
+
+    // Apply filters based on page context
+    if (isInterior) {
+      queryParams += `&category=in.(${interiorCats.join(',')})`;
+    } else if (isCivil) {
+      queryParams += `&category=in.(${civilCats.join(',')})`;
+    }
+
+    const projects = await sbFetch('projects', queryParams);
     if (!projects.length) return;
 
-    // Only update if grid has [data-dynamic="true"] attribute
-    // This prevents overwriting hand-coded grids on pages that don't want it
-    if (!grid.dataset.dynamic) return;
+    grid.innerHTML = projects.map((p, i) => {
+      // Use detail page mapping
+      const detailPage = isInterior ? 'Interior-Project-Detail.html' : 'Civil-Project-Detail.html';
 
-    grid.innerHTML = projects.map((p, i) => `
-      <div class="proj-card" data-cat="${p.category || 'residential'}">
+      return `
+      <div class="proj-card revealed" data-cat="${p.category || 'general'}">
         <div class="proj-card-inner">
           <div class="card-photo">
             ${p.image_url
-              ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
-              : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
-            }
+          ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
+          : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
+        }
             <div class="card-overlay">
               <div class="overlay-label">${p.title}</div>
               ${p.cost ? `<div class="overlay-cost">₹${p.cost}</div>` : ''}
-              <a class="overlay-btn" href="Civil-Project-Detail.html?id=${p.id}">View Project →</a>
+              <a class="overlay-btn" href="${detailPage}?id=${p.id}">View Project →</a>
             </div>
             <span class="card-badge">${capitalize(p.category || 'Project')}</span>
             <div class="card-info">
@@ -212,13 +228,17 @@ async function loadProjects() {
                 <div class="card-title">${p.title}</div>
                 ${p.location ? `<div class="card-loc">${p.location}</div>` : ''}
               </div>
-              <div class="card-num">${String(i+1).padStart(2,'0')}</div>
+              <div class="card-num">${String(i + 1).padStart(2, '0')}</div>
             </div>
           </div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
 
-  } catch(e) {
+    // Re-run any local scripts if needed (like IntersectionObserver)
+    if (typeof initProjectScroll === 'function') initProjectScroll();
+
+  } catch (e) {
     console.warn('[mBuild] Projects load failed:', e.message);
   }
 }
@@ -275,7 +295,7 @@ async function loadGallery() {
       };
     });
 
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Gallery load failed:', e.message);
   }
 }
@@ -292,7 +312,7 @@ async function loadHomeGallery() {
     if (!images.length) return;
 
     grid.innerHTML = images.map((img, i) => `
-      <div class="g-tile ${i===0?'g-tile-large':''} reveal" data-cat="${img.category}">
+      <div class="g-tile ${i === 0 ? 'g-tile-large' : ''} reveal" data-cat="${img.category}">
         <img src="${img.image_url}" alt="${img.title || 'mBuild'}" loading="lazy"/>
         <span class="g-badge">${capitalize(img.category)}</span>
         <div class="g-tile-overlay">
@@ -303,7 +323,7 @@ async function loadHomeGallery() {
         </div>
       </div>`).join('');
 
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Home gallery load failed:', e.message);
   }
 }
@@ -329,19 +349,19 @@ async function loadProjectDetail() {
     const p = rows[0];
 
     // Inject into detail page
-    if (document.getElementById('heroTitle'))   document.getElementById('heroTitle').textContent   = p.title;
-    if (document.getElementById('heroCat'))     document.getElementById('heroCat').textContent     = capitalize(p.category);
-    if (document.getElementById('heroLoc'))     document.getElementById('heroLoc').textContent     = p.location || '—';
-    if (document.getElementById('heroArea'))    document.getElementById('heroArea').textContent    = p.area || '—';
-    if (document.getElementById('heroCost'))    document.getElementById('heroCost').textContent    = p.cost || '—';
-    if (document.getElementById('breadTitle'))  document.getElementById('breadTitle').textContent  = p.title;
-    if (document.getElementById('infoClient'))  document.getElementById('infoClient').textContent  = p.client || '—';
-    if (document.getElementById('infoLocation'))document.getElementById('infoLocation').textContent= p.location || '—';
-    if (document.getElementById('infoType'))    document.getElementById('infoType').textContent    = capitalize(p.category);
-    if (document.getElementById('infoArea'))    document.getElementById('infoArea').textContent    = p.area || '—';
-    if (document.getElementById('infoCost'))    document.getElementById('infoCost').textContent    = p.cost || '—';
-    if (document.getElementById('infoConsultant'))document.getElementById('infoConsultant').textContent = p.consultant || '—';
-    if (document.getElementById('descText'))    document.getElementById('descText').textContent    = p.description || '';
+    if (document.getElementById('heroTitle')) document.getElementById('heroTitle').textContent = p.title;
+    if (document.getElementById('heroCat')) document.getElementById('heroCat').textContent = capitalize(p.category);
+    if (document.getElementById('heroLoc')) document.getElementById('heroLoc').textContent = p.location || '—';
+    if (document.getElementById('heroArea')) document.getElementById('heroArea').textContent = p.area || '—';
+    if (document.getElementById('heroCost')) document.getElementById('heroCost').textContent = p.cost || '—';
+    if (document.getElementById('breadTitle')) document.getElementById('breadTitle').textContent = p.title;
+    if (document.getElementById('infoClient')) document.getElementById('infoClient').textContent = p.client || '—';
+    if (document.getElementById('infoLocation')) document.getElementById('infoLocation').textContent = p.location || '—';
+    if (document.getElementById('infoType')) document.getElementById('infoType').textContent = capitalize(p.category);
+    if (document.getElementById('infoArea')) document.getElementById('infoArea').textContent = p.area || '—';
+    if (document.getElementById('infoCost')) document.getElementById('infoCost').textContent = p.cost || '—';
+    if (document.getElementById('infoConsultant')) document.getElementById('infoConsultant').textContent = p.consultant || '—';
+    if (document.getElementById('descText')) document.getElementById('descText').textContent = p.description || '';
     if (document.getElementById('sidebarCost')) document.getElementById('sidebarCost').textContent = p.cost || '—';
     if (document.getElementById('sidebarArea')) document.getElementById('sidebarArea').textContent = p.area || '—';
     if (document.getElementById('heroImg') && p.image_url) document.getElementById('heroImg').src = p.image_url;
@@ -359,7 +379,7 @@ async function loadProjectDetail() {
 
     document.title = `${p.title} – MBUILD DEVELOPERS`;
 
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Project detail load failed:', e.message);
   }
 }
@@ -371,15 +391,15 @@ function initContactForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
 
-  form.addEventListener('submit', async function(e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const btn     = document.getElementById('submitBtn');
+    const btn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     const successMsg = document.getElementById('successMsg');
-    const errorMsg   = document.getElementById('errorMsg');
+    const errorMsg = document.getElementById('errorMsg');
     if (successMsg) successMsg.style.display = 'none';
-    if (errorMsg)   errorMsg.style.display   = 'none';
+    if (errorMsg) errorMsg.style.display = 'none';
 
     if (btn) {
       btn.disabled = true;
@@ -389,12 +409,12 @@ function initContactForm() {
     }
 
     const payload = {
-      name:         (document.getElementById('from_name')    || {}).value || '',
-      email:        (document.getElementById('from_email')   || {}).value || null,
-      phone:        (document.getElementById('phone')        || {}).value || '',
+      name: (document.getElementById('from_name') || {}).value || '',
+      email: (document.getElementById('from_email') || {}).value || null,
+      phone: (document.getElementById('phone') || {}).value || '',
       project_type: (document.getElementById('project_type') || {}).value || null,
-      location:     (document.getElementById('location')     || {}).value || null,
-      message:      (document.getElementById('message')      || {}).value || '',
+      location: (document.getElementById('location') || {}).value || null,
+      message: (document.getElementById('message') || {}).value || '',
     };
 
     try {
@@ -413,20 +433,20 @@ function initContactForm() {
 
       // 2 — Also send via EmailJS if configured
       const pubKey = window.EMAILJS_PUBLIC_KEY || (window.MBUILD_SETTINGS || {}).emailjs_public_key;
-      const svcId  = window.EMAILJS_SERVICE_ID  || (window.MBUILD_SETTINGS || {}).emailjs_service_id;
-      const tplId  = window.EMAILJS_TEMPLATE_ID || (window.MBUILD_SETTINGS || {}).emailjs_template_id;
+      const svcId = window.EMAILJS_SERVICE_ID || (window.MBUILD_SETTINGS || {}).emailjs_service_id;
+      const tplId = window.EMAILJS_TEMPLATE_ID || (window.MBUILD_SETTINGS || {}).emailjs_template_id;
 
       if (pubKey && svcId && tplId && typeof emailjs !== 'undefined') {
         emailjs.init(pubKey);
         await emailjs.send(svcId, tplId, {
-          from_name:    payload.name,
-          from_email:   payload.email || 'Not provided',
-          phone:        payload.phone,
+          from_name: payload.name,
+          from_email: payload.email || 'Not provided',
+          phone: payload.phone,
           project_type: payload.project_type || 'Not specified',
-          location:     payload.location || 'Not specified',
-          message:      payload.message,
-          to_email:     'mbuiltsangli@gmail.com',
-          reply_to:     payload.email || 'mbuiltsangli@gmail.com',
+          location: payload.location || 'Not specified',
+          message: payload.message,
+          to_email: 'mbuiltsangli@gmail.com',
+          reply_to: payload.email || 'mbuiltsangli@gmail.com',
         });
       }
 
@@ -446,7 +466,7 @@ function initContactForm() {
       if (successMsg) successMsg.style.display = 'block';
       form.reset();
 
-    } catch(err) {
+    } catch (err) {
       console.error('[mBuild] Form submit error:', err);
       if (btn) {
         btn.disabled = false;
@@ -492,11 +512,11 @@ function updateFooterContact(contact) {
       if (!icon) return;
       if (icon.classList.contains('fa-phone') && contact.phone1) {
         const span = li.querySelector('span');
-        if (span) span.innerHTML = `${contact.phone1}${contact.phone2 ? '<br/>'+contact.phone2 : ''}`;
+        if (span) span.innerHTML = `${contact.phone1}${contact.phone2 ? '<br/>' + contact.phone2 : ''}`;
       }
       if (icon.classList.contains('fa-envelope') && contact.email1) {
         const span = li.querySelector('span');
-        if (span) span.innerHTML = `${contact.email1}${contact.email2 ? '<br/>'+contact.email2 : ''}`;
+        if (span) span.innerHTML = `${contact.email1}${contact.email2 ? '<br/>' + contact.email2 : ''}`;
       }
       if (icon.classList.contains('fa-location-dot') && contact.address) {
         const span = li.querySelector('span');
@@ -531,7 +551,7 @@ async function init() {
     await Promise.all([loadSettings(), loadContent()]);
 
     // Page-specific loaders
-    if (PAGE.includes('Civil-Projects')) {
+    if (PAGE.includes('Civil-Projects') || PAGE.includes('Interior-projects')) {
       await loadProjects();
     }
     if (PAGE.includes('Photo-Gallary')) {
@@ -546,14 +566,40 @@ async function init() {
     if (PAGE.includes('Contact-Us')) {
       initContactForm();
     }
-  } catch(e) {
+  } catch (e) {
     console.warn('[mBuild] Init error:', e.message);
+  }
+}
+
+function initHamburger() {
+  const hamburger = document.querySelector('.hamburger');
+  const navbar = document.querySelector('.navbar');
+  const icon = hamburger ? hamburger.querySelector('i') : null;
+
+  if (hamburger && navbar) {
+    hamburger.addEventListener('click', () => {
+      const isActive = navbar.classList.toggle('active');
+      hamburger.classList.toggle('active');
+
+      if (icon) {
+        icon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+      }
+    });
+
+    navbar.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('active');
+        hamburger.classList.remove('active');
+        if (icon) icon.className = 'fas fa-bars';
+      });
+    });
   }
 }
 
 // Run on DOM ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => { init(); initHamburger(); });
 } else {
   init();
+  initHamburger();
 }
