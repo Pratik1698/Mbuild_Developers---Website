@@ -598,8 +598,210 @@ function initHamburger() {
 
 // Run on DOM ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => { init(); initHamburger(); });
+  document.addEventListener('DOMContentLoaded', () => { init(); initHamburger(); initPremiumEffects(); });
 } else {
   init();
   initHamburger();
+  initPremiumEffects();
+}
+
+/* ═══════════════════════════════════════
+   ✨ PREMIUM EFFECTS ENGINE
+   All features auto-detect & apply across every page
+   ═══════════════════════════════════════ */
+
+function initPremiumEffects() {
+  injectPreloader();
+  injectBackToTop();
+  initCounterAnimations();
+  initShimmerButtons();
+  initBadgePulse();
+  initStaggeredReveals();
+}
+
+/* ── 1. PAGE PRELOADER ── */
+function injectPreloader() {
+  // Don't add if already exists
+  if (document.querySelector('.page-preloader')) return;
+
+  const preloader = document.createElement('div');
+  preloader.className = 'page-preloader';
+  preloader.innerHTML = `
+    <img class="preloader-logo" src="${getBasePath()}assets/images/logo_new.png" alt="MBUILD" onerror="this.style.display='none'"/>
+    <div class="preloader-spinner"></div>
+    <div class="preloader-text">Loading</div>
+  `;
+  document.body.prepend(preloader);
+
+  // Fade out when page is fully loaded
+  const hide = () => {
+    setTimeout(() => {
+      preloader.classList.add('loaded');
+      // Remove from DOM after animation
+      setTimeout(() => preloader.remove(), 700);
+    }, 400);
+  };
+
+  if (document.readyState === 'complete') {
+    hide();
+  } else {
+    window.addEventListener('load', hide);
+  }
+}
+
+/* ── 2. BACK TO TOP BUTTON ── */
+function injectBackToTop() {
+  if (document.querySelector('.back-to-top')) return;
+
+  const btn = document.createElement('button');
+  btn.className = 'back-to-top';
+  btn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+  btn.setAttribute('aria-label', 'Back to top');
+  btn.title = 'Back to top';
+  document.body.appendChild(btn);
+
+  // Show/hide on scroll
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        btn.classList.toggle('visible', window.scrollY > 400);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Smooth scroll to top
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ── 3. ANIMATED COUNTER NUMBERS ── */
+function initCounterAnimations() {
+  // Target all number elements: trust bar, hero counters, hero stats, about stats
+  const numSelectors = '.ts-num, .hc-num, .int-hero-stat .sn, .stat-num, .shl-num';
+  const numElements = document.querySelectorAll(numSelectors);
+
+  numElements.forEach(el => {
+    const text = el.textContent.trim();
+    // Extract numeric part: "250+" → 250, "₹15Cr+" → 15, "9+" → 9
+    const match = text.match(/(\d+)/);
+    if (!match) return;
+
+    const target = parseInt(match[1], 10);
+    const prefix = text.slice(0, text.indexOf(match[1]));
+    const suffix = text.slice(text.indexOf(match[1]) + match[1].length);
+
+    el.setAttribute('data-count-target', target);
+    el.setAttribute('data-count-prefix', prefix);
+    el.setAttribute('data-count-suffix', suffix);
+    el._counted = false;
+  });
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target._counted) {
+        entry.target._counted = true;
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  numElements.forEach(el => {
+    if (el.hasAttribute('data-count-target')) {
+      counterObserver.observe(el);
+    }
+  });
+}
+
+function animateCounter(el) {
+  const target = parseInt(el.getAttribute('data-count-target'), 10);
+  const prefix = el.getAttribute('data-count-prefix') || '';
+  const suffix = el.getAttribute('data-count-suffix') || '';
+  const duration = 1800;
+  const start = performance.now();
+
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    // Ease-out cubic for smooth deceleration
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(eased * target);
+    el.textContent = prefix + current + suffix;
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      el.textContent = prefix + target + suffix;
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+/* ── 4. SHIMMER ON GOLD BUTTONS ── */
+function initShimmerButtons() {
+  const buttonSelectors = [
+    '.btn-hero-primary', '.btn-cta-main', '.btn-gold-fill',
+    '.btn-sm', '.btn-gold', '.overlay-btn', '.int-hero-btn',
+    '.cta-btn-primary'
+  ];
+
+  buttonSelectors.forEach(selector => {
+    document.querySelectorAll(selector).forEach(btn => {
+      if (!btn.classList.contains('btn-shimmer')) {
+        btn.classList.add('btn-shimmer');
+      }
+    });
+  });
+}
+
+/* ── 5. BADGE PULSE ON REVEAL ── */
+function initBadgePulse() {
+  const badges = document.querySelectorAll(
+    '.g-badge, .card-badge, .proj-cat, .hero-badge-pill'
+  );
+
+  const badgeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('badge-pulse');
+        // Stop pulsing after 5 seconds
+        setTimeout(() => {
+          entry.target.classList.remove('badge-pulse');
+        }, 5000);
+        badgeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  badges.forEach(badge => badgeObserver.observe(badge));
+}
+
+/* ── 6. STAGGERED CARD REVEALS ── */
+function initStaggeredReveals() {
+  // For service cards, project cards, cert cards — stagger their reveal
+  const grids = document.querySelectorAll(
+    '.services-grid, .proj-grid, .int-grid, .test-grid, .cert-strip, .gallery-grid, .team-grid, .masonry-grid'
+  );
+
+  grids.forEach(grid => {
+    const cards = grid.children;
+    Array.from(cards).forEach((card, i) => {
+      if (card.classList.contains('reveal')) {
+        card.style.transitionDelay = `${i * 0.08}s`;
+      }
+    });
+  });
+}
+
+/* ── HELPER: Get base path for assets ── */
+function getBasePath() {
+  const path = window.location.pathname;
+  if (path.includes('/pages/') || path.includes('\\pages\\')) {
+    return '../';
+  }
+  return '';
 }
