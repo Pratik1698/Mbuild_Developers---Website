@@ -1629,6 +1629,87 @@
     const grid = document.getElementById('galleryGrid');
     document.getElementById('gridBtn').addEventListener('click', () => { grid.classList.remove('list-view'); document.getElementById('gridBtn').classList.add('active'); document.getElementById('listBtn').classList.remove('active'); });
     document.getElementById('listBtn').addEventListener('click', () => { grid.classList.add('list-view'); document.getElementById('listBtn').classList.add('active'); document.getElementById('gridBtn').classList.remove('active'); });
+    /* ── HELPER ── */
+    function capitalize(s) {
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    /* ══════════════════════════════════════
+       LOAD ADMIN PROJECTS FROM SUPABASE
+    ══════════════════════════════════════ */
+    const SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
+
+    async function loadAdminProjects() {
+      try {
+        const res = await fetch(
+          `${SB_URL}/rest/v1/projects?select=*&order=created_at.desc`,
+          { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+        );
+        const dbProjects = await res.json();
+        if (!dbProjects || !dbProjects.length) return;
+
+        const grid = document.getElementById('galleryGrid');
+        if (!grid) return;
+
+        const newCards = dbProjects.map(p => {
+          const cat = p.category || 'residential';
+          return `
+          <div class="proj-card" data-cat="${cat}" style="opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(0.16,1,0.3,1)">
+            <div class="proj-card-inner">
+              <div class="card-photo">
+                ${p.image_url
+                  ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
+                  : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
+                }
+                <div class="card-overlay">
+                  <div class="overlay-label">${p.title}</div>
+                  ${p.cost ? `<div class="overlay-cost">Project Cost: ${p.cost}</div>` : ''}
+                  <a class="overlay-btn" href="Civil-Project-Detail.html?id=${p.id}">View Project →</a>
+                </div>
+                <span class="card-badge">${capitalize(cat)}</span>
+                <span style="position:absolute;top:16px;right:16px;z-index:4;background:#25d366;color:#fff;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px">New</span>
+                <div class="card-info">
+                  <div>
+                    <div class="card-cat">${capitalize(cat)}</div>
+                    <div class="card-title">${p.title}</div>
+                    ${p.location ? `<div class="card-loc">${p.location}</div>` : ''}
+                  </div>
+                  <div class="card-num">★</div>
+                </div>
+              </div>
+              <div class="card-list-body">
+                <div class="clb-cat">${capitalize(cat)}</div>
+                <div class="clb-title">${p.title}</div>
+                ${p.location ? `<div class="clb-loc">📍 ${p.location}</div>` : ''}
+                ${p.cost ? `<div class="clb-cost">Cost: ${p.cost} | Area: ${p.area || '—'}</div>` : ''}
+                <a class="clb-btn" href="Civil-Project-Detail.html?id=${p.id}">View Full Project →</a>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+
+        grid.insertAdjacentHTML('afterbegin', newCards);
+
+        requestAnimationFrame(() => {
+          grid.querySelectorAll('.proj-card[style*="opacity:0"]').forEach((card, i) => {
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+              card.classList.add('revealed');
+            }, i * 80);
+          });
+        });
+
+        const cnt = document.getElementById('cnt');
+        if (cnt) cnt.textContent = grid.querySelectorAll('.proj-card').length;
+
+      } catch (e) {
+        console.error('[mBuild] Admin projects load failed:', e.message);
+      }
+    }
+
+    loadAdminProjects();
   </script>
   <script src="../assets/js/website.js"></script>
 </body>

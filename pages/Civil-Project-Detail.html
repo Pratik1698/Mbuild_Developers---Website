@@ -343,6 +343,177 @@ button{cursor:pointer;}
 </footer>
 
 <script>
+  /* ═══════════════════════════════════════════════════════════
+   FIX for Civil-Project-Detail.html
+   
+   ADD this entire block INSIDE the <script> tag in
+   Civil-Project-Detail.html, BEFORE the existing projects{} object.
+   
+   This makes the page work for BOTH:
+   - Old slug IDs (asha-school, kiran-gavde...) → uses static data
+   - New Supabase UUID IDs → fetches live from database
+═══════════════════════════════════════════════════════════ */
+
+/* ── YOUR SUPABASE CREDENTIALS (same as website.js) ── */
+const SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
+
+/* ── Check if ID is a Supabase UUID ── */
+const urlId  = new URLSearchParams(window.location.search).get('id') || '';
+const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(urlId);
+
+if (isUUID) {
+  /* ════════════════════════════════════════
+     SUPABASE PATH — Load from database
+     Runs when admin adds project via dashboard
+  ════════════════════════════════════════ */
+  loadFromSupabase(urlId);
+
+  async function loadFromSupabase(id) {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/projects?id=eq.${id}&select=*&limit=1`, {
+        headers: {
+          apikey: SB_KEY,
+          Authorization: `Bearer ${SB_KEY}`,
+        }
+      });
+      const rows = await res.json();
+      if (!rows || rows.length === 0) {
+        document.getElementById('heroTitle').textContent = 'Project Not Found';
+        return;
+      }
+      const p = rows[0];
+      injectProjectData(p);
+      loadRelatedFromSupabase(p.category, p.id);
+    } catch(e) {
+      console.error('Supabase load error:', e);
+    }
+  }
+
+  function injectProjectData(p) {
+    document.title = (p.title || 'Project') + ' – MBUILD DEVELOPERS';
+
+    // Hero
+    const heroImg = document.getElementById('heroImg');
+    if (heroImg) {
+      heroImg.src = p.image_url || '';
+      heroImg.alt = p.title || '';
+    }
+    setText('breadTitle',   (p.title || '').split(' ').slice(0,4).join(' ') + '...');
+    setText('heroCat',      capitalize(p.category || ''));
+    setText('heroTitle',    p.title || '—');
+    setText('heroLoc',      p.location || '—');
+    setText('heroArea',     p.area || '—');
+    setText('heroCost',     p.cost || '—');
+
+    // Info rows
+    setText('infoClient',     p.client     || '—');
+    setText('infoConsultant', p.consultant || '—');
+    setText('infoLocation',   p.location   || '—');
+    setText('infoType',       capitalize(p.category || '') + ' · ' + (p.status || ''));
+    setText('infoStructure',  p.description ? p.description.split('.')[0] : '—');
+    setText('infoArea',       p.area  || '—');
+    setText('infoCost',       p.cost  || '—');
+
+    // Description
+    const descEl = document.getElementById('descText');
+    if (descEl) descEl.innerHTML = (p.description || 'Project description coming soon.').replace(/\n\n/g,'</p><p>');
+
+    // Feature tags from description keywords
+    const fl = document.getElementById('featureList');
+    if (fl) {
+      const features = buildFeatures(p);
+      fl.innerHTML = features.map(f =>
+        `<div class="feature-item"><i class="fas fa-check-circle"></i>${f}</div>`
+      ).join('');
+    }
+
+    // Sidebar
+    setText('sidebarCost',   p.cost  || '—');
+    setText('sidebarArea',   p.area  || '—');
+    setText('sidebarFloors', p.status || '—');
+
+    // Photos grid — use main image
+    const pg = document.getElementById('photosGrid');
+    if (pg && p.image_url) {
+      pg.innerHTML = `
+        <div class="photo-item" onclick="openLightbox(0)">
+          <img src="${p.image_url}" alt="${p.title}" loading="lazy"/>
+          <div class="photo-overlay"><div class="photo-zoom"><i class="fas fa-expand"></i></div></div>
+        </div>`;
+      // Make lightbox work with this single photo
+      window._supabasePhotos = [p.image_url];
+      window.openLightbox = function(i) {
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        if (!lb || !lbImg) return;
+        lbImg.src = window._supabasePhotos[i] || '';
+        document.getElementById('lbCounter').textContent = '1/1';
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+    }
+  }
+
+  async function loadRelatedFromSupabase(category, excludeId) {
+    try {
+      const res = await fetch(
+        `${SB_URL}/rest/v1/projects?category=eq.${category}&id=neq.${excludeId}&select=id,title,location,cost,image_url,category&limit=3`,
+        { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+      );
+      const related = await res.json();
+      const rg = document.getElementById('relatedGrid');
+      if (!rg || !related.length) return;
+
+      rg.innerHTML = related.map(r => `
+        <a class="related-card" href="Civil-Project-Detail.html?id=${r.id}">
+          ${r.image_url
+            ? `<img src="${r.image_url}" alt="${r.title}" loading="lazy"/>`
+            : `<div style="height:180px;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:2.5rem">🏗️</div>`
+          }
+          <div class="related-info">
+            <div class="related-cat">${capitalize(r.category || '')}</div>
+            <div class="related-title">${r.title}</div>
+            <div class="related-cost">${r.cost || ''}</div>
+          </div>
+        </a>`).join('');
+    } catch(e) {}
+  }
+
+  function buildFeatures(p) {
+    const feats = [];
+    if (p.area)     feats.push('Total Area: ' + p.area);
+    if (p.cost)     feats.push('Project Cost: ' + p.cost);
+    if (p.location) feats.push('Location: ' + p.location);
+    if (p.client)   feats.push('Client: ' + p.client);
+    if (p.status)   feats.push(capitalize(p.status) + ' Project');
+    if (p.completion_date) feats.push('Completed: ' + new Date(p.completion_date).getFullYear());
+    // Add category-based defaults
+    const defaults = {
+      residential: ['RCC Frame Structure', 'Compound Wall', 'Interior Work'],
+      commercial:  ['Commercial Grade', 'Modern Facade', 'Site Development'],
+      institutional: ['Government Standard', 'Quality Assured'],
+      other: ['Quality Construction', 'On-time Delivery'],
+    };
+    (defaults[p.category] || defaults.other).forEach(d => feats.push(d));
+    return feats.slice(0, 8);
+  }
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  }
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+} /* end if (isUUID) */
+
+/* ════════════════════════════════════════
+   STATIC PATH — existing code below runs
+   for slug IDs like ?id=asha-school
+   Keep your existing `const projects = {...}` 
+   and all the code below UNCHANGED
+════════════════════════════════════════ */
+
 /* ═══════════════════════════════
    ALL PROJECT DATA FROM PDF
 ═══════════════════════════════ */
