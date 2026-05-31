@@ -354,9 +354,10 @@ button{cursor:pointer;}
    - New Supabase UUID IDs → fetches live from database
 ═══════════════════════════════════════════════════════════ */
 
-/* ── YOUR SUPABASE CREDENTIALS (same as website.js) ── */
-const SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
+/* ── Supabase loader (wrapped to avoid const collision with website.js) ── */
+(function() {
+const _SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
 
 /* ── Check if ID is a Supabase UUID ── */
 const urlId  = new URLSearchParams(window.location.search).get('id') || '';
@@ -371,10 +372,10 @@ if (isUUID) {
 
   async function loadFromSupabase(id) {
     try {
-      const res = await fetch(`${SB_URL}/rest/v1/projects?id=eq.${id}&select=*&limit=1`, {
+      const res = await fetch(`${_SB_URL}/rest/v1/projects?id=eq.${id}&select=*&limit=1`, {
         headers: {
-          apikey: SB_KEY,
-          Authorization: `Bearer ${SB_KEY}`,
+          apikey: _SB_KEY,
+          Authorization: `Bearer ${_SB_KEY}`,
         }
       });
       const rows = await res.json();
@@ -458,8 +459,8 @@ if (isUUID) {
   async function loadRelatedFromSupabase(category, excludeId) {
     try {
       const res = await fetch(
-        `${SB_URL}/rest/v1/projects?category=eq.${category}&id=neq.${excludeId}&select=id,title,location,cost,image_url,category&limit=3`,
-        { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+        `${_SB_URL}/rest/v1/projects?category=eq.${category}&id=neq.${excludeId}&select=id,title,location,cost,image_url,category&limit=3`,
+        { headers: { apikey: _SB_KEY, Authorization: `Bearer ${_SB_KEY}` } }
       );
       const related = await res.json();
       const rg = document.getElementById('relatedGrid');
@@ -506,6 +507,7 @@ if (isUUID) {
   function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
 } /* end if (isUUID) */
+})(); /* end IIFE */
 
 /* ════════════════════════════════════════
    STATIC PATH — existing code below runs
