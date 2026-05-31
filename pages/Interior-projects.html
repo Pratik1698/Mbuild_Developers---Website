@@ -1587,53 +1587,92 @@
   </footer>
 
   <script>
-    /* ── SCROLL REVEAL ── */
-    const cards = document.querySelectorAll('.proj-card');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('revealed'), i * 80);
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: .1 });
-    cards.forEach(c => observer.observe(c));
+    /* INTERACTIVE EFFECTS & LIGHTBOX SETUP */
+    let obs;
+    let projects = [];
+    let currentIdx = 0;
+    
+    function initInteractiveEffects() {
+      const cards = document.querySelectorAll('.proj-card');
+      
+      // 1. Scroll Reveal
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('revealed'), i * 80);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: .1 });
+      cards.forEach(c => obs.observe(c));
 
-    /* ── CARD HOVER TILT ── */
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - .5;
-        const y = (e.clientY - r.top) / r.height - .5;
-        card.style.transform = `perspective(1000px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.02) translateY(-6px)`;
-      });
-      card.addEventListener('mouseleave', () => {
+      // 2. Hover Tilt
+      cards.forEach(card => {
+        if (card._tiltInitialized) return;
+        card._tiltInitialized = true;
+        
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - .5;
+          const y = (e.clientY - r.top) / r.height - .5;
+          card.style.transform = `perspective(1000px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.02) translateY(-6px)`;
+        });
         card.style.transform = '';
-        document.getElementById('galleryGrid').classList.remove('dimmed');
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+          document.getElementById('galleryGrid').classList.remove('dimmed');
+        });
+        card.addEventListener('mouseenter', () => {
+          document.getElementById('galleryGrid').classList.add('dimmed');
+        });
       });
-      card.addEventListener('mouseenter', () => {
-        document.getElementById('galleryGrid').classList.add('dimmed');
-      });
-    });
 
-    /* ── FILTER ── */
+      // 3. Rebuild Lightbox Array
+      projects = Array.from(cards).map(card => ({
+        src: card.querySelector('.card-photo img')?.src || '',
+        cat: card.querySelector('.card-cat')?.textContent || '',
+        title: card.querySelector('.card-title')?.textContent || '',
+        loc: card.querySelector('.card-loc')?.textContent?.replace('📍', '').trim() || ''
+      }));
+
+      // 4. Click handlers for Lightbox
+      cards.forEach((card, i) => {
+        if (card._clickInitialized) return;
+        card._clickInitialized = true;
+        
+        card.addEventListener('click', () => openLightbox(i));
+        card.querySelector('.overlay-btn')?.addEventListener('click', e => {
+          e.stopPropagation();
+          openLightbox(i);
+        });
+      });
+    }
+
+    // Run interactive effects initially
+    initInteractiveEffects();
+
+    /* FILTER */
     document.querySelectorAll('.pill').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         const f = btn.dataset.filter;
         let n = 0;
-        cards.forEach(c => {
+        const currentCards = document.querySelectorAll('.proj-card');
+        currentCards.forEach(c => {
           const show = f === 'all' || c.dataset.cat === f;
           c.style.display = show ? '' : 'none';
           if (show) n++;
           if (show && !c.classList.contains('revealed')) c.classList.add('revealed');
         });
         document.getElementById('cnt').textContent = n;
+        
+        initInteractiveEffects();
       });
     });
 
-    /* ── VIEW TOGGLE ── */
+    /* VIEW TOGGLE */
     const grid = document.getElementById('galleryGrid');
     document.getElementById('gridBtn').addEventListener('click', () => {
       grid.classList.remove('list-view');
@@ -1646,23 +1685,17 @@
       document.getElementById('gridBtn').classList.remove('active');
     });
 
-    /* ── LIGHTBOX ── */
-    const projects = Array.from(cards).map(card => ({
-      src: card.querySelector('.card-photo img')?.src || '',
-      cat: card.querySelector('.card-cat')?.textContent || '',
-      title: card.querySelector('.card-title')?.textContent || '',
-      loc: card.querySelector('.card-loc')?.textContent?.replace('📍', '').trim() || ''
-    }));
-    let currentIdx = 0;
+    /* LIGHTBOX LOGIC */
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
     const lbCat = document.getElementById('lbCat');
     const lbTitle = document.getElementById('lbTitle');
     const lbLoc = document.getElementById('lbLoc');
     const lbCounter = document.getElementById('lbCounter');
-    lbImg.style.transition = 'opacity .2s';
+    if (lbImg) lbImg.style.transition = 'opacity .2s';
 
     function openLightbox(idx) {
+      if (!projects[idx]) return;
       currentIdx = idx;
       const p = projects[idx];
       lbImg.src = p.src; lbImg.alt = p.title;
@@ -1678,6 +1711,7 @@
       document.body.style.overflow = '';
     }
     function navigate(dir) {
+      if (!projects.length) return;
       currentIdx = (currentIdx + dir + projects.length) % projects.length;
       lbImg.style.opacity = '0';
       setTimeout(() => {
@@ -1700,14 +1734,172 @@
       if (e.key === 'ArrowRight') navigate(1);
       if (e.key === 'ArrowLeft') navigate(-1);
     });
-    /* Card click = open lightbox */
-    cards.forEach((card, i) => {
-      card.addEventListener('click', () => openLightbox(i));
-      card.querySelector('.overlay-btn')?.addEventListener('click', e => {
-        e.stopPropagation();
-        openLightbox(i);
-      });
-    });
+
+    /* ══════════════════════════════════════
+       LOAD ADMIN PROJECTS FROM SUPABASE
+       (Wrapped in IIFE to avoid conflicting
+        with const declarations in website.js)
+       ══════════════════════════════════════ */
+    (function() {
+    const _SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
+    const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
+
+    async function loadAdminProjects() {
+      try {
+        const interiorCats = ['bedroom', 'kitchen', 'clinic', 'living', 'dining', 'interior'];
+        const res = await fetch(
+          `${_SB_URL}/rest/v1/projects?select=*&order=created_at.desc&category=in.(${interiorCats.join(',')})`,
+          { headers: { apikey: _SB_KEY, Authorization: `Bearer ${_SB_KEY}` } }
+        );
+        const dbProjects = await res.json();
+        if (!dbProjects || !dbProjects.length) return;
+
+        const grid = document.getElementById('galleryGrid');
+        if (!grid) return;
+
+        const existingCards = Array.from(grid.querySelectorAll('.proj-card'));
+        const prependedCardsHTML = [];
+
+        dbProjects.forEach(p => {
+          const cat = p.category || 'interior';
+          
+          // Try to find a matching card
+          let matchedCard = null;
+          
+          // Match by id in link first
+          matchedCard = existingCards.find(card => {
+            const btn = card.querySelector('.overlay-btn');
+            if (!btn) return false;
+            const onclickText = btn.getAttribute('onclick') || '';
+            return onclickText.includes(p.id);
+          });
+
+          // Match by staticMap or title substring if not matched by ID yet
+          if (!matchedCard && p.title) {
+            matchedCard = existingCards.find(card => {
+              const titleEl = card.querySelector('.card-title');
+              if (!titleEl) return false;
+              const cardTitleText = titleEl.textContent.toLowerCase();
+              return cardTitleText.includes(p.title.toLowerCase()) || p.title.toLowerCase().includes(cardTitleText);
+            });
+          }
+
+          if (matchedCard) {
+            // Update existing static card details in-place
+            matchedCard.dataset.cat = cat;
+            
+            // 1. Update Badge
+            const badge = matchedCard.querySelector('.card-badge');
+            if (badge) badge.textContent = _capitalize(cat);
+            
+            // 2. Update Image
+            if (p.image_url) {
+              const img = matchedCard.querySelector('.card-photo img');
+              if (img) {
+                img.src = p.image_url;
+                img.alt = p.title;
+              }
+            }
+
+            // 3. Update overlay
+            const overlayLabel = matchedCard.querySelector('.overlay-label');
+            if (overlayLabel) overlayLabel.textContent = p.title;
+
+            // 4. Update info bar (grid view)
+            const cardCat = matchedCard.querySelector('.card-cat');
+            if (cardCat) cardCat.textContent = p.client || _capitalize(cat);
+
+            const cardTitle = matchedCard.querySelector('.card-title');
+            if (cardTitle) cardTitle.textContent = p.title;
+
+            const cardLoc = matchedCard.querySelector('.card-loc');
+            if (cardLoc) cardLoc.textContent = p.location || '';
+
+            // 5. Update list body (list view)
+            const clbCat = matchedCard.querySelector('.clb-cat');
+            if (clbCat) clbCat.textContent = _capitalize(cat);
+
+            const clbTitle = matchedCard.querySelector('.clb-title');
+            if (clbTitle) clbTitle.textContent = p.title;
+
+            const clbLoc = matchedCard.querySelector('.clb-loc');
+            if (clbLoc) clbLoc.textContent = p.location ? `📍 ${p.location}` : '';
+
+            const clbTags = matchedCard.querySelector('.clb-tags');
+            if (clbTags) {
+              clbTags.innerHTML = `<span class="clb-tag">${_capitalize(cat)}</span>${p.area ? `<span class="clb-tag">${p.area}</span>` : ''}`;
+            }
+
+          } else {
+            // Prepend brand new project additions
+            prependedCardsHTML.push(`
+            <div class="proj-card" data-cat="${cat}" style="opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(0.16,1,0.3,1)">
+              <div class="proj-card-inner">
+                <div class="card-photo">
+                  ${p.image_url
+                    ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
+                    : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
+                  }
+                  <div class="card-overlay">
+                    <div class="overlay-label">${p.title}</div>
+                    <button class="overlay-btn">View Project →</button>
+                  </div>
+                  <span class="card-badge">${_capitalize(cat)}</span>
+                  <span style="position:absolute;top:16px;right:16px;z-index:4;background:#25d366;color:#fff;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px">New</span>
+                  <div class="card-info">
+                    <div>
+                      <div class="card-cat">${p.client || _capitalize(cat)}</div>
+                      <div class="card-title">${p.title}</div>
+                      ${p.location ? `<div class="card-loc">${p.location}</div>` : ''}
+                    </div>
+                    <div class="card-num">★</div>
+                  </div>
+                </div>
+                <div class="card-list-body">
+                  <div class="clb-cat">${_capitalize(cat)}</div>
+                  <div class="clb-title">${p.title}</div>
+                  ${p.location ? `<div class="clb-loc">📍 ${p.location}</div>` : ''}
+                  <div class="clb-tags">
+                    <span class="clb-tag">${_capitalize(cat)}</span>
+                    ${p.area ? `<span class="clb-tag">${p.area}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>`);
+          }
+        });
+
+        if (prependedCardsHTML.length > 0) {
+          grid.insertAdjacentHTML('afterbegin', prependedCardsHTML.join(''));
+          requestAnimationFrame(() => {
+            grid.querySelectorAll('.proj-card[style*="opacity:0"]').forEach((card, i) => {
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.classList.add('revealed');
+              }, i * 80);
+            });
+          });
+        }
+
+        // Re-initialize interactivity and rebuild lightbox array
+        initInteractiveEffects();
+
+        // Update total counter
+        const cnt = document.getElementById('cnt');
+        if (cnt) cnt.textContent = grid.querySelectorAll('.proj-card').length;
+
+      } catch (e) {
+        console.error('[mBuild] Admin projects load failed:', e.message);
+      }
+    }
+
+    function _capitalize(s) {
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    loadAdminProjects();
+    })();
   </script>
   <script src="../assets/js/website.js"></script>
 </body>

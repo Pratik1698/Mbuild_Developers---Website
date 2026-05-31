@@ -1594,33 +1594,58 @@
   </footer>
 
   <script>
-    /* SCROLL REVEAL */
-    const cards = document.querySelectorAll('.proj-card');
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('revealed'), i * 70); obs.unobserve(e.target); }
-      });
-    }, { threshold: .08 });
-    cards.forEach(c => obs.observe(c));
+    /* INTERACTIVE EFFECTS */
+    let obs;
+    function initInteractiveEffects() {
+      const cards = document.querySelectorAll('.proj-card');
+      
+      // 1. Scroll Reveal
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) { 
+            setTimeout(() => e.target.classList.add('revealed'), i * 70); 
+            obs.unobserve(e.target); 
+          }
+        });
+      }, { threshold: .08 });
+      cards.forEach(c => obs.observe(c));
 
-    /* TILT + DIM */
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-        card.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) scale(1.02) translateY(-6px)`;
+      // 2. Tilt + Dim
+      cards.forEach(card => {
+        if (card._tiltInitialized) return;
+        card._tiltInitialized = true;
+        
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+          card.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) scale(1.02) translateY(-6px)`;
+        });
+        card.addEventListener('mouseleave', () => { 
+          card.style.transform = ''; 
+          document.getElementById('galleryGrid').classList.remove('dimmed'); 
+        });
+        card.addEventListener('mouseenter', () => document.getElementById('galleryGrid').classList.add('dimmed'));
       });
-      card.addEventListener('mouseleave', () => { card.style.transform = ''; document.getElementById('galleryGrid').classList.remove('dimmed'); });
-      card.addEventListener('mouseenter', () => document.getElementById('galleryGrid').classList.add('dimmed'));
-    });
+    }
+
+    // Run interactive effects initially
+    initInteractiveEffects();
 
     /* FILTER */
     document.querySelectorAll('.pill').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        const f = btn.dataset.filter; let n = 0;
-        cards.forEach(c => { const show = f === 'all' || c.dataset.cat === f; c.style.display = show ? '' : 'none'; if (show) n++; if (show && !c.classList.contains('revealed')) c.classList.add('revealed'); });
+        const f = btn.dataset.filter; 
+        let n = 0;
+        const currentCards = document.querySelectorAll('.proj-card');
+        currentCards.forEach(c => { 
+          const show = f === 'all' || c.dataset.cat === f; 
+          c.style.display = show ? '' : 'none'; 
+          if (show) n++; 
+          if (show && !c.classList.contains('revealed')) c.classList.add('revealed'); 
+        });
         document.getElementById('cnt').textContent = n;
       });
     });
@@ -1634,7 +1659,7 @@
        LOAD ADMIN PROJECTS FROM SUPABASE
        (Wrapped in IIFE to avoid conflicting
         with const declarations in website.js)
-    ══════════════════════════════════════ */
+       ══════════════════════════════════════ */
     (function() {
     const _SB_URL = 'https://draslpunaydcrjmpasoj.supabase.co';
     const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyYXNscHVuYXlkY3JqbXBhc29qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzgwNDQsImV4cCI6MjA5MDExNDA0NH0.h-UJ34MzdpUdBSON92OvfEa2JlyO7Di42E_GTHqfBIA';
@@ -1651,54 +1676,180 @@
         const grid = document.getElementById('galleryGrid');
         if (!grid) return;
 
-        const newCards = dbProjects.map(p => {
+        const staticMap = {
+          'asha-school': 'asha world school',
+          'kiran-gavde': 'kiran gavde',
+          'green-building': 'vaibhav hendre',
+          'sampat-gavde': 'sampat gavde',
+          'suhas-sankpal': 'suhas sankpal',
+          'viraj-waterpark': 'viraj water park',
+          'hotel-dhanashree': 'dhanashree',
+          'nagrale-gp': 'nagrale',
+          'rajendra-lad': 'rajendra lad',
+          'mahadev-mandir': 'mahadev mandir'
+        };
+
+        const existingCards = Array.from(grid.querySelectorAll('.proj-card'));
+        const prependedCardsHTML = [];
+
+        dbProjects.forEach(p => {
           const cat = p.category || 'residential';
-          return `
-          <div class="proj-card" data-cat="${cat}" style="opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(0.16,1,0.3,1)">
-            <div class="proj-card-inner">
-              <div class="card-photo">
-                ${p.image_url
-                  ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
-                  : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
-                }
-                <div class="card-overlay">
-                  <div class="overlay-label">${p.title}</div>
-                  ${p.cost ? `<div class="overlay-cost">Project Cost: ${p.cost}</div>` : ''}
-                  <a class="overlay-btn" href="Civil-Project-Detail.html?id=${p.id}">View Project →</a>
-                </div>
-                <span class="card-badge">${_capitalize(cat)}</span>
-                <span style="position:absolute;top:16px;right:16px;z-index:4;background:#25d366;color:#fff;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px">New</span>
-                <div class="card-info">
-                  <div>
-                    <div class="card-cat">${_capitalize(cat)}</div>
-                    <div class="card-title">${p.title}</div>
-                    ${p.location ? `<div class="card-loc">${p.location}</div>` : ''}
-                  </div>
-                  <div class="card-num">★</div>
-                </div>
-              </div>
-              <div class="card-list-body">
-                <div class="clb-cat">${_capitalize(cat)}</div>
-                <div class="clb-title">${p.title}</div>
-                ${p.location ? `<div class="clb-loc">📍 ${p.location}</div>` : ''}
-                ${p.cost ? `<div class="clb-cost">Cost: ${p.cost} | Area: ${p.area || '—'}</div>` : ''}
-                <a class="clb-btn" href="Civil-Project-Detail.html?id=${p.id}">View Full Project →</a>
-              </div>
-            </div>
-          </div>`;
-        }).join('');
-
-        grid.insertAdjacentHTML('afterbegin', newCards);
-
-        requestAnimationFrame(() => {
-          grid.querySelectorAll('.proj-card[style*="opacity:0"]').forEach((card, i) => {
-            setTimeout(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'translateY(0)';
-              card.classList.add('revealed');
-            }, i * 80);
+          
+          // Try to find a matching card
+          let matchedCard = null;
+          
+          // Match by id in link first
+          matchedCard = existingCards.find(card => {
+            const btn = card.querySelector('.overlay-btn');
+            if (!btn) return false;
+            const href = btn.getAttribute('href') || '';
+            return href.includes(`id=${p.id}`);
           });
+
+          // Match by staticMap or title substring if not matched by ID yet
+          if (!matchedCard && p.title) {
+            matchedCard = existingCards.find(card => {
+              const btn = card.querySelector('.overlay-btn');
+              if (!btn) return false;
+              const href = btn.getAttribute('href') || '';
+              
+              // Extract static ID slug from href
+              const m = href.match(/id=([^&]+)/);
+              const slug = m ? m[1] : '';
+              const keyword = staticMap[slug];
+              
+              const titleLower = p.title.toLowerCase();
+              return (keyword && titleLower.includes(keyword)) || titleLower.includes(slug.replace('-', ' '));
+            });
+          }
+
+          if (matchedCard) {
+            // Update existing static card details in-place
+            matchedCard.dataset.cat = cat;
+            
+            // 1. Update Badge
+            const badge = matchedCard.querySelector('.card-badge');
+            if (badge) badge.textContent = _capitalize(cat);
+            
+            // 2. Update Image
+            if (p.image_url) {
+              const img = matchedCard.querySelector('.card-photo img');
+              if (img) {
+                img.src = p.image_url;
+                img.alt = p.title;
+              }
+            }
+
+            // 3. Update overlay
+            const overlayLabel = matchedCard.querySelector('.overlay-label');
+            if (overlayLabel) overlayLabel.textContent = p.title;
+            
+            const overlayCost = matchedCard.querySelector('.overlay-cost');
+            if (overlayCost) {
+              overlayCost.textContent = p.cost ? `Project Cost: ${p.cost.startsWith('₹') ? p.cost : '₹' + p.cost}` : '';
+            }
+
+            const overlayBtn = matchedCard.querySelector('.overlay-btn');
+            if (overlayBtn) overlayBtn.href = `Civil-Project-Detail.html?id=${p.id}`;
+
+            // 4. Update info bar (grid view)
+            const cardCat = matchedCard.querySelector('.card-cat');
+            if (cardCat) cardCat.textContent = p.client || _capitalize(cat);
+
+            const cardTitle = matchedCard.querySelector('.card-title');
+            if (cardTitle) cardTitle.textContent = p.title;
+
+            const cardLoc = matchedCard.querySelector('.card-loc');
+            if (cardLoc) cardLoc.textContent = p.location || '';
+
+            // 5. Update list body (list view)
+            const clbCat = matchedCard.querySelector('.clb-cat');
+            if (clbCat) clbCat.textContent = _capitalize(cat);
+
+            const clbTitle = matchedCard.querySelector('.clb-title');
+            if (clbTitle) clbTitle.textContent = p.title;
+
+            const clbLoc = matchedCard.querySelector('.clb-loc');
+            if (clbLoc) clbLoc.textContent = p.location ? `📍 ${p.location}` : '';
+
+            const clbCost = matchedCard.querySelector('.clb-cost');
+            if (clbCost) {
+              clbCost.textContent = `Cost: ${p.cost ? (p.cost.startsWith('₹') ? p.cost : '₹' + p.cost) : '—'} ${p.area ? ` | Area: ${p.area}` : ''}`;
+            }
+
+            const clbBtn = matchedCard.querySelector('.clb-btn');
+            if (clbBtn) clbBtn.href = `Civil-Project-Detail.html?id=${p.id}`;
+
+          } else {
+            // Prepend brand new project additions
+            prependedCardsHTML.push(`
+            <div class="proj-card" data-cat="${cat}" style="opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(0.16,1,0.3,1)">
+              <div class="proj-card-inner">
+                <div class="card-photo">
+                  ${p.image_url
+                    ? `<img src="${p.image_url}" alt="${p.title}" loading="lazy"/>`
+                    : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3558,#254a78);display:flex;align-items:center;justify-content:center;font-size:3rem">🏗️</div>`
+                  }
+                  <div class="card-overlay">
+                    <div class="overlay-label">${p.title}</div>
+                    ${p.cost ? `<div class="overlay-cost">Project Cost: ${p.cost.startsWith('₹') ? p.cost : '₹' + p.cost}</div>` : ''}
+                    <a class="overlay-btn" href="Civil-Project-Detail.html?id=${p.id}">View Project →</a>
+                  </div>
+                  <span class="card-badge">${_capitalize(cat)}</span>
+                  <span style="position:absolute;top:16px;right:16px;z-index:4;background:#25d366;color:#fff;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px">New</span>
+                  <div class="card-info">
+                    <div>
+                      <div class="card-cat">${p.client || _capitalize(cat)}</div>
+                      <div class="card-title">${p.title}</div>
+                      ${p.location ? `<div class="card-loc">${p.location}</div>` : ''}
+                    </div>
+                    <div class="card-num">★</div>
+                  </div>
+                </div>
+                <div class="card-list-body">
+                  <div class="clb-cat">${_capitalize(cat)}</div>
+                  <div class="clb-title">${p.title}</div>
+                  ${p.location ? `<div class="clb-loc">📍 ${p.location}</div>` : ''}
+                  <div class="clb-cost">${p.cost ? `Cost: ${p.cost.startsWith('₹') ? p.cost : '₹' + p.cost}` : ''} ${p.area ? ` | Area: ${p.area}` : ''}</div>
+                  <a class="clb-btn" href="Civil-Project-Detail.html?id=${p.id}">View Full Project →</a>
+                </div>
+              </div>
+            </div>`);
+          }
         });
+
+        if (prependedCardsHTML.length > 0) {
+          grid.insertAdjacentHTML('afterbegin', prependedCardsHTML.join(''));
+          requestAnimationFrame(() => {
+            grid.querySelectorAll('.proj-card[style*="opacity:0"]').forEach((card, i) => {
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.classList.add('revealed');
+              }, i * 80);
+            });
+          });
+        }
+
+        // Re-initialize interactivity on all project cards (new and updated ones)
+        initInteractiveEffects();
+
+        // Update total counter
+        const cnt = document.getElementById('cnt');
+        if (cnt) cnt.textContent = grid.querySelectorAll('.proj-card').length;
+
+      } catch (e) {
+        console.error('[mBuild] Admin projects load failed:', e.message);
+      }
+    }
+
+    function _capitalize(s) {
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    loadAdminProjects();
+    })();
+  </script>
 
         const cnt = document.getElementById('cnt');
         if (cnt) cnt.textContent = grid.querySelectorAll('.proj-card').length;

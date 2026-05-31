@@ -42,7 +42,7 @@ async function loadSettings() {
     window.MBUILD_SETTINGS = s;
 
     // Page title
-    if (s.site_title && document.title.includes('MBUILD')) {
+    if (s.site_title && (document.title.includes('MBUILD') || document.title.toLowerCase().includes('mbuild'))) {
       // Keep page-specific prefix, update brand
       const parts = document.title.split('–');
       if (parts.length > 1) document.title = `${parts[0].trim()} – ${s.site_title}`;
@@ -135,6 +135,7 @@ async function loadContent() {
     // Stats bar (trust-bar on homepage)
     setStatByIndex(0, about.projects || '250+');
     setStatByIndex(1, about.experience || '9+');
+    setStatByIndex(2, about.turnover || '₹15Cr+');
 
     /* ── CONTACT SECTION ── */
     const contact = c.contact || {};
@@ -484,7 +485,14 @@ function initContactForm() {
 ══════════════════════════════════ */
 function setText(selector, value) {
   if (!value) return;
-  document.querySelectorAll(selector).forEach(el => { el.textContent = value; });
+  document.querySelectorAll(selector).forEach(el => {
+    // If the value contains HTML tags, use innerHTML, otherwise use textContent to prevent stripping format
+    if (/<[a-z][\s\S]*>/i.test(value)) {
+      el.innerHTML = value;
+    } else {
+      el.textContent = value;
+    }
+  });
 }
 
 function injectHTML(el, html) {
@@ -684,22 +692,6 @@ function initCounterAnimations() {
   const numSelectors = '.ts-num, .hc-num, .int-hero-stat .sn, .stat-num, .shl-num';
   const numElements = document.querySelectorAll(numSelectors);
 
-  numElements.forEach(el => {
-    const text = el.textContent.trim();
-    // Extract numeric part: "250+" → 250, "₹15Cr+" → 15, "9+" → 9
-    const match = text.match(/(\d+)/);
-    if (!match) return;
-
-    const target = parseInt(match[1], 10);
-    const prefix = text.slice(0, text.indexOf(match[1]));
-    const suffix = text.slice(text.indexOf(match[1]) + match[1].length);
-
-    el.setAttribute('data-count-target', target);
-    el.setAttribute('data-count-prefix', prefix);
-    el.setAttribute('data-count-suffix', suffix);
-    el._counted = false;
-  });
-
   const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !entry.target._counted) {
@@ -711,16 +703,21 @@ function initCounterAnimations() {
   }, { threshold: 0.3 });
 
   numElements.forEach(el => {
-    if (el.hasAttribute('data-count-target')) {
-      counterObserver.observe(el);
-    }
+    el._counted = false;
+    counterObserver.observe(el);
   });
 }
 
 function animateCounter(el) {
-  const target = parseInt(el.getAttribute('data-count-target'), 10);
-  const prefix = el.getAttribute('data-count-prefix') || '';
-  const suffix = el.getAttribute('data-count-suffix') || '';
+  // Dynamically extract the latest number from textContent at animation time (captures async CMS updates!)
+  const text = el.textContent.trim();
+  const match = text.match(/(\d+)/);
+  if (!match) return;
+
+  const target = parseInt(match[1], 10);
+  const prefix = text.slice(0, text.indexOf(match[1]));
+  const suffix = text.slice(text.indexOf(match[1]) + match[1].length);
+
   const duration = 1800;
   const start = performance.now();
 
